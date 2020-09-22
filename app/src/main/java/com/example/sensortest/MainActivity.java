@@ -19,13 +19,17 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.Vector;
+
+import threeDvector.Vec3D;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener, SensorEventListener {
 
     private SensorManager sManager;
     private Sensor mSensorAccelerometer;
     private Sensor mGyroscope;
+    private Context mContext;
 
     private TextView tv_step;
     private TextView tv_step2;
@@ -36,21 +40,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private TextView tv_Gstep3;
 
     //用来存数据
-    private Context mContext;
-
+    //private Context mContext;
 
 
     private Button btn_start;
     private int step = 0;   //步数
-    private double x = 0;
-    private double y = 0;
-    private double z = 0;
-    private Vector<float[]> sensorData1 = new Vector<float[]>();
-
-    private double x2 = 0;
-    private double y2 = 0;
-    private double z2 = 0;
-    private Vector<float[]> sensorData2 = new Vector<float[]>();
+    private ArrayList<Vec3D> sensorData_Acc = new ArrayList();
+    private ArrayList<Vec3D> sensorData_Gry = new ArrayList();
 
 
     private double oriValue = 0;  //原始值
@@ -64,25 +60,25 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private static final int REQUEST_EXTERNAL_STORAGE = 1;
     private static String[] PERMISSIONS_STORAGE = {
             Manifest.permission.READ_EXTERNAL_STORAGE,
-            Manifest.permission.WRITE_EXTERNAL_STORAGE };
+            Manifest.permission.WRITE_EXTERNAL_STORAGE};
 
     public static void verifyStoragePermissions(Activity activity) {
-            // Check if we have write permission
+        // Check if we have write permission
         int permission = ActivityCompat.checkSelfPermission(activity,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE);
 
         if (permission != PackageManager.PERMISSION_GRANTED) {
             // We don't have permission so prompt the user
-             ActivityCompat.requestPermissions(activity, PERMISSIONS_STORAGE,
+            ActivityCompat.requestPermissions(activity, PERMISSIONS_STORAGE,
                     REQUEST_EXTERNAL_STORAGE);
         }
-       }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        mContext = getApplicationContext();
+        mContext=getApplicationContext();
 
         //Register for the sensor
         sManager = (SensorManager) getSystemService(SENSOR_SERVICE);
@@ -117,20 +113,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         double range = 1;   //设定一个精度范围
         Sensor sensor = event.sensor;
 
-        if(sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
+        if (sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
             //Data Receive from sensor
-            float[] value = event.values.clone();
-            curValue = magnitude(value[0], value[1], value[2]);   //计算当前的模
-            x = value[0];
-            y = value[1];
-            z = value[2];
+            float[] value = event.values
+            Vec3D tmpVec = new Vec3D(value[0], value[1], value[2]);
+            curValue = tmpVec.getMagnitude();   //计算当前的模
             DecimalFormat df = new DecimalFormat("######0.00");  //print two decimal number
-
             if (processState == true) {
-                tv_step.setText("X: " + df.format(x));
-                tv_step2.setText("Y: " + df.format(y));
-                tv_step3.setText("Z: " + df.format(z));
-                sensorData1.add(value);
+                tv_step.setText("X: " + df.format(tmpVec.getX()));
+                tv_step2.setText("Y: " + df.format(tmpVec.getY()));
+                tv_step3.setText("Z: " + df.format(tmpVec.getZ()));
+                sensorData_Acc.add(tmpVec);
             }
         /*
         //向上加速的状态
@@ -164,42 +157,37 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
         */
-        }
-
-        else if (sensor.getType() == Sensor.TYPE_GYROSCOPE)
-        {
-            float[] value = event.values;
-
-            x2 = value[0];
-            y2 = value[1];
-            z2 = value[2];
+        } else if (sensor.getType() == Sensor.TYPE_GYROSCOPE) {
+            float[] value = event.values
+            Vec3D tmpVec = new Vec3D(value[0], value[1], value[2]);
+            curValue = tmpVec.getMagnitude();   //计算当前的模
             DecimalFormat df = new DecimalFormat("######0.00");  //print two decimal number
-
             if (processState == true) {
-                tv_Gstep.setText("X: " + df.format(x2));
-                tv_Gstep2.setText("Y: " + df.format(y2));
-                tv_Gstep3.setText("Z: " + df.format(z2));
-                sensorData2.add(value);
+                tv_step.setText("X: " + df.format(tmpVec.getX()));
+                tv_step2.setText("Y: " + df.format(tmpVec.getY()));
+                tv_step3.setText("Z: " + df.format(tmpVec.getZ()));
+                sensorData_Acc.add(tmpVec);
             }
         }
     }
 
 
     @Override
-    public void onAccuracyChanged(Sensor sensor, int accuracy) {}
+    public void onAccuracyChanged(Sensor sensor, int accuracy) {
+    }
 
     @SuppressLint("SetTextI18n")
     @Override
     public void onClick(View v) {
         step = 0;
 
-        tv_step.setText("X: "+ 0);
-        tv_step2.setText("Y: "+ 0);
-        tv_step3.setText("Z: "+ 0);
+        tv_step.setText("X: " + 0);
+        tv_step2.setText("Y: " + 0);
+        tv_step3.setText("Z: " + 0);
 
-        tv_Gstep.setText("X: "+ 0);
-        tv_Gstep2.setText("Y: "+ 0);
-        tv_Gstep3.setText("Z: "+ 0);
+        tv_Gstep.setText("X: " + 0);
+        tv_Gstep2.setText("Y: " + 0);
+        tv_Gstep3.setText("Z: " + 0);
 
 
         if (processState == true) {
@@ -208,15 +196,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             processState = false;
 
             //写入数据
-            FileHelper fileHelper = new FileHelper(mContext);
             try {
                 verifyStoragePermissions(this);
-                fileHelper.save(sensorData1);
-                fileHelper.save(sensorData2);
-                Toast.makeText(getApplicationContext(), "数据写入成功", Toast.LENGTH_SHORT).show();
+                FileHelperKt.VecDatasave(mContext,sensorData_Acc,"Acceleration");
+                FileHelperKt.VecDatasave(mContext,sensorData_Gry,"AngularSpeed");
+                Toast.makeText(mContext, "数据写入成功", Toast.LENGTH_SHORT).show();
             } catch (Exception e) {
                 e.printStackTrace();
-                Toast.makeText(getApplicationContext(), "数据写入失败", Toast.LENGTH_SHORT).show();
+                Toast.makeText(mContext, "数据写入失败", Toast.LENGTH_SHORT).show();
             }
 
 
@@ -225,13 +212,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             processState = true;
 
         }
-    }
-
-    //向量求模
-    public double magnitude(float x, float y, float z) {
-        double magnitude = 0;
-        magnitude = Math.sqrt(x * x + y * y + z * z);
-        return magnitude;
     }
 
     @Override
