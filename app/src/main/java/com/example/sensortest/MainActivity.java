@@ -115,7 +115,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         if (sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
             //Data Receive from sensor
-            float[] value = event.values
+            float[] value = event.values;
             Vec3D tmpVec = new Vec3D(value[0], value[1], value[2]);
             curValue = tmpVec.getMagnitude();   //计算当前的模
             DecimalFormat df = new DecimalFormat("######0.00");  //print two decimal number
@@ -158,7 +158,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         */
         } else if (sensor.getType() == Sensor.TYPE_GYROSCOPE) {
-            float[] value = event.values
+            float[] value = event.values;
             Vec3D tmpVec = new Vec3D(value[0], value[1], value[2]);
             curValue = tmpVec.getMagnitude();   //计算当前的模
             DecimalFormat df = new DecimalFormat("######0.00");  //print two decimal number
