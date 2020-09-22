@@ -119,7 +119,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         if(sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
             //Data Receive from sensor
-            float[] value = event.values;
+            float[] value = event.values.clone();
             curValue = magnitude(value[0], value[1], value[2]);   //计算当前的模
             x = value[0];
             y = value[1];
