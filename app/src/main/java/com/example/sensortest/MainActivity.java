@@ -20,7 +20,6 @@ import android.widget.Toast;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.Vector;
 
 import threeDvector.Vec3D;
 
@@ -54,25 +53,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private double curValue = 0;  //当前值
     private boolean motiveState = true;   //是否处于运动状态
     private boolean processState = false;   //标记当前是否已经在计步
-
-
-    //动态申请sd卡权限
-    private static final int REQUEST_EXTERNAL_STORAGE = 1;
-    private static String[] PERMISSIONS_STORAGE = {
-            Manifest.permission.READ_EXTERNAL_STORAGE,
-            Manifest.permission.WRITE_EXTERNAL_STORAGE};
-
-    public static void verifyStoragePermissions(Activity activity) {
-        // Check if we have write permission
-        int permission = ActivityCompat.checkSelfPermission(activity,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE);
-
-        if (permission != PackageManager.PERMISSION_GRANTED) {
-            // We don't have permission so prompt the user
-            ActivityCompat.requestPermissions(activity, PERMISSIONS_STORAGE,
-                    REQUEST_EXTERNAL_STORAGE);
-        }
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -196,7 +176,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             processState = false;
 
             //写入数据
-            FileHelperKt.VecDatasave(mContext,serialize(sensorData_Acc),filename='SensorData');
+            FileHelperKt.FileSave(mContext,sensorData_Acc,filename='SensorData');
         } else {
             btn_start.setText("停止");
             processState = true;
