@@ -1,9 +1,9 @@
 package com.example.sensortest;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
-import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
@@ -12,14 +12,19 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 
 import threeDvector.Vec3D;
 
@@ -58,7 +63,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        mContext=getApplicationContext();
+        mContext = getApplicationContext();
 
         //Register for the sensor
         sManager = (SensorManager) getSystemService(SENSOR_SERVICE);
@@ -156,6 +161,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.R)
     @SuppressLint("SetTextI18n")
     @Override
     public void onClick(View v) {
@@ -176,7 +182,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             processState = false;
 
             //写入数据
-            FileHelperKt.FileSave(mContext,sensorData_Acc,filename='SensorData');
+            Gson gson = new Gson();
+            FileHelperKt.FileSave(this, mContext, gson.toJson(sensorData_Acc), null, "SensorData");
         } else {
             btn_start.setText("停止");
             processState = true;
