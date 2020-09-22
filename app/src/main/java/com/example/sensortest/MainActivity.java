@@ -163,10 +163,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             curValue = tmpVec.getMagnitude();   //计算当前的模
             DecimalFormat df = new DecimalFormat("######0.00");  //print two decimal number
             if (processState == true) {
-                tv_step.setText("X: " + df.format(tmpVec.getX()));
-                tv_step2.setText("Y: " + df.format(tmpVec.getY()));
-                tv_step3.setText("Z: " + df.format(tmpVec.getZ()));
-                sensorData_Acc.add(tmpVec);
+                tv_Gstep.setText("X: " + df.format(tmpVec.getX()));
+                tv_Gstep2.setText("Y: " + df.format(tmpVec.getY()));
+                tv_Gstep3.setText("Z: " + df.format(tmpVec.getZ()));
+                sensorData_Gry.add(tmpVec);
             }
         }
     }
@@ -196,17 +196,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             processState = false;
 
             //写入数据
-            try {
-                verifyStoragePermissions(this);
-                FileHelperKt.VecDatasave(mContext,sensorData_Acc,"Acceleration");
-                FileHelperKt.VecDatasave(mContext,sensorData_Gry,"AngularSpeed");
-                Toast.makeText(mContext, "数据写入成功", Toast.LENGTH_SHORT).show();
-            } catch (Exception e) {
-                e.printStackTrace();
-                Toast.makeText(mContext, "数据写入失败", Toast.LENGTH_SHORT).show();
-            }
-
-
+            FileHelperKt.VecDatasave(mContext,serialize(sensorData_Acc),filename='SensorData');
         } else {
             btn_start.setText("停止");
             processState = true;
