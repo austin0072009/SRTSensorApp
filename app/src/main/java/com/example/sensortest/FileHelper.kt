@@ -1,22 +1,23 @@
 package com.example.sensortest
 
+import android.app.Activity
 import android.content.Context
 import android.os.Environment
 import android.widget.Toast
 import java.io.File
-import java.io.FileNotFoundException
 import java.io.FileOutputStream
 import java.io.IOException
+
 
 /*
  * 这里定义的是一个文件保存的方法，写入到文件中，所以是输出流
  * */
-@Throws(Exception::class)
-inline fun Filesave(mContext: Context, fileContent: String, filepath:String?=null,filename: String?) {
+fun Activity.FileSave(mContext: Context, fileContent: String, filepath:String?=null, filename: String?) {
     //这里我们使用私有模式,创建出来的文件只能被本应用访问,还会覆盖原文件哦
     if (Environment.getExternalStorageState() == Environment.MEDIA_MOUNTED) {
         val myExternalFile: File = File(mContext.getExternalFilesDir(filepath), filename)
         try {
+            verifyStoragePermissions(this)
             val fileOutPutStream = FileOutputStream(myExternalFile)
             fileOutPutStream.write(fileContent.toByteArray())
             fileOutPutStream.close()
@@ -31,7 +32,7 @@ inline fun Filesave(mContext: Context, fileContent: String, filepath:String?=nul
 /*
  * 这里定义的是文件读取的方法
  * */
-@Throws(IOException::class, FileNotFoundException::class)
+/*@Throws(IOException::class, FileNotFoundException::class)
 fun VecDatasave(mContext: Context, filename: String?): String {
     //打开文件输入流
     val input = mContext!!.openFileInput(filename)
@@ -45,4 +46,4 @@ fun VecDatasave(mContext: Context, filename: String?): String {
     //关闭输入流
     input.close()
     return sb.toString()
-}
+}*/
