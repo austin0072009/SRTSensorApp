@@ -19,7 +19,7 @@ import java.util.*
 fun VecDatasave(mContext: Context, filecontent: ArrayList<Vec3D>, vectorname: String) {
     //这里我们使用私有模式,创建出来的文件只能被本应用访问,还会覆盖原文件哦
     if (Environment.getExternalStorageState() == Environment.MEDIA_MOUNTED) {
-        var myExternalFile: File = File(getExternalFilesDir(null), "SensorDataRecord")
+        val myExternalFile: File = File(mContext.getExternalFilesDir(null), "SensorDataRecord")
         val output = FileOutputStream(myExternalFile)
         val jsonArray = JSONArray()
         for (item in filecontent.iterator()) {
