@@ -14,7 +14,7 @@ import java.io.IOException
  * */
 fun serialize(vararg srcs: Any): String {
     val gson = Gson()
-    return if (srcs.size == 1) gson.toJson(srcs) else gson.toJson(listOf(srcs))
+    return gson.toJson(srcs)
 }
 
 /*
