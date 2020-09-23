@@ -5,14 +5,16 @@ import android.content.Context
 import android.os.Environment
 import android.widget.Toast
 import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
 
 /*
- * 使用GSON将对象转化为JSON
+ * 使用GSON将对象JSON序列化以及反序列化
  * */
-fun serialize(vararg srcs: Any) = Gson().toJson(srcs)
+fun serialize(vararg srcs: Any):String = Gson().toJson(srcs)
+inline fun <reified T> deserialize(json: String):T = Gson().fromJson<T>(json, object : TypeToken<T>() {}.type)
 
 /*
  * 这里定义的是一个文件保存的方法，写入到文件中，所以是输出流
