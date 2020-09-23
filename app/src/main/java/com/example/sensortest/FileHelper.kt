@@ -12,10 +12,7 @@ import java.io.IOException
 /*
  * 使用GSON将对象转化为JSON
  * */
-fun serialize(vararg srcs: Any): String {
-    val gson = Gson()
-    return gson.toJson(srcs)
-}
+fun serialize(vararg srcs: Any) = Gson().toJson(srcs)
 
 /*
  * 这里定义的是一个文件保存的方法，写入到文件中，所以是输出流
