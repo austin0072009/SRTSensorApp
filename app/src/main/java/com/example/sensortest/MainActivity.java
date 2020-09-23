@@ -184,7 +184,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             //写入数据
 
-            FileHelperKt.FileSave(this, mContext, FileHelperKt.serialize(sensorData_Acc,sensorData_Gry), null, "SensorData");
+            FileHelperKt.FileSave(this, mContext, FileHelperKt.serialize(sensorData_Acc,sensorData_Gry), null, "SensorDataRecord.JSON");
         } else {
             btn_start.setText("停止");
             processState = true;
