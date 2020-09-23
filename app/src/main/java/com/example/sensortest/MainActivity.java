@@ -14,6 +14,7 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Pair;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -182,8 +183,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             processState = false;
 
             //写入数据
-            Gson gson = new Gson();
-            FileHelperKt.FileSave(this, mContext, gson.toJson(sensorData_Acc), null, "SensorData");
+
+            FileHelperKt.FileSave(this, mContext, FileHelperKt.serialize(sensorData_Acc,sensorData_Gry), null, "SensorData");
         } else {
             btn_start.setText("停止");
             processState = true;
