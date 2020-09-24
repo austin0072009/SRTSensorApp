@@ -147,6 +147,6 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
 
     override fun onDestroy() {
         super.onDestroy()
-        sManager!!.unregisterListener(this)
+        sManager.unregisterListener(this)
     }
 }
