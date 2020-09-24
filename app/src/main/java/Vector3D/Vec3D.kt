@@ -4,7 +4,7 @@ import java.lang.IllegalArgumentException
 import kotlin.math.sqrt
 
 
-data class Vec3D(var x: Double, var y: Double, var z: Double) {
+data class Vec3D(var x: Double, var y: Double, var z: Double) : VecTor {
     constructor(coord: Array<Number>) : this(coord[0].toDouble(), coord[1].toDouble(), coord[2].toDouble())
     constructor(x: Number, y: Number, z: Number) : this(x.toDouble(), y.toDouble(), z.toDouble())
 
@@ -14,23 +14,25 @@ data class Vec3D(var x: Double, var y: Double, var z: Double) {
         val UNIT_Z = Vec3D(0, 0, 1)
     }
 
-    operator fun get(index: Int) = when (index) {
+    override operator fun get(index: Int) = when (index) {
         0 -> x
         1 -> y
         2 -> z
         else -> throw IllegalArgumentException("It is a 3D vector.")
     }
 
-    operator fun set(index: Int, value: Number): Unit = when (index) {
-        0 -> x = value.toDouble()
-        1 -> y = value.toDouble()
-        2 -> z = value.toDouble()
+    override operator fun set(index: Int, value: Double): Unit = when (index) {
+        0 -> x = value
+        1 -> y = value
+        2 -> z = value
         else -> throw IllegalArgumentException("It is a 3D vector.")
     }
+
+    operator fun set(index: Int, value: Number): Unit = set(index, value.toDouble())
 
     //cross product
     operator fun times(other: Vec3D) = Vec3D(y * other.z - z * other.y, z * other.x - x * other.z, x * other.y - y * other.x)
 
     val magnitude get() = sqrt(x * x + y * y + z * z)
-    val size get() = 3
+    override val size get() = 3   //VecTor接口需要
 }
