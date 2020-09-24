@@ -6,6 +6,8 @@ import kotlin.math.sqrt
 
 data class Vec3D(var x: Double, var y: Double, var z: Double) : VecTor {
     constructor(coord: Array<Number>) : this(coord[0].toDouble(), coord[1].toDouble(), coord[2].toDouble())
+    constructor(coord: FloatArray) : this(coord[0].toDouble(), coord[1].toDouble(), coord[2].toDouble())
+    constructor(coord: DoubleArray) : this(coord[0], coord[1], coord[2])
     constructor(x: Number, y: Number, z: Number) : this(x.toDouble(), y.toDouble(), z.toDouble())
 
     companion object {
