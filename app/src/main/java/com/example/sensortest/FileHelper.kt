@@ -20,21 +20,21 @@ inline fun <reified T> deserialize(json: String): T = Gson().fromJson<T>(json, o
 /*
  * 这里定义的是一个文件保存的方法，写入到文件中，所以是输出流
  * */
-fun Activity.FileSave(mContext: Context = this.application, fileContent: String, filepath: String? = null, filename: String) {
+fun Activity.FileSave(fileContent: String, filepath: String? = null, filename: String) {
     //这里我们使用私有模式,创建出来的文件只能被本应用访问,还会覆盖原文件哦
     if (Environment.getExternalStorageState() == Environment.MEDIA_MOUNTED) {
-        val myExternalFile: File = File(mContext.getExternalFilesDir(filepath), filename)
+        val myExternalFile: File = File(getExternalFilesDir(filepath), filename)
         try {
             verifyStoragePermissions()
             val fileOutPutStream = FileOutputStream(myExternalFile)
             fileOutPutStream.write(fileContent.toByteArray())
             fileOutPutStream.close()
-            mContext.toast("数据写入成功")
+            toast("数据写入成功")
         } catch (e: IOException) {
             e.printStackTrace()
-            mContext.toast("数据写入失败")
+            toast("数据写入失败")
         }
-    } else mContext.toast("SD卡不存在或者不可读写")
+    } else toast("SD卡不存在或者不可读写")
 }
 
 /*
