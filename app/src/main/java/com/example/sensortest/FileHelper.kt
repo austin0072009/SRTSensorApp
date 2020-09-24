@@ -1,6 +1,7 @@
 package com.example.sensortest
 
 import android.app.Activity
+import android.app.Application
 import android.content.Context
 import android.os.Environment
 import android.widget.Toast
@@ -29,12 +30,12 @@ fun Activity.FileSave(fileContent: String, filepath: String? = null, filename: S
             val fileOutPutStream = FileOutputStream(myExternalFile)
             fileOutPutStream.write(fileContent.toByteArray())
             fileOutPutStream.close()
-            toast("数据写入成功")
+            applicationContext.toast("数据写入成功")      //直接省略写toast即this.toast也是可以的，但是可能会内存外泄
         } catch (e: IOException) {
             e.printStackTrace()
-            toast("数据写入失败")
+            applicationContext.toast("数据写入失败")
         }
-    } else toast("SD卡不存在或者不可读写")
+    } else applicationContext.toast("SD卡不存在或者不可读写")
 }
 
 /*
