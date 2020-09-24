@@ -13,13 +13,13 @@ import java.io.IOException
 /*
  * 使用GSON将对象JSON序列化以及反序列化
  * */
-fun serialize(vararg srcs: Any):String = Gson().toJson(srcs)
-inline fun <reified T> deserialize(json: String):T = Gson().fromJson<T>(json, object : TypeToken<T>() {}.type)
+fun serialize(vararg srcs: Any): String = Gson().toJson(srcs)
+inline fun <reified T> deserialize(json: String): T = Gson().fromJson<T>(json, object : TypeToken<T>() {}.type)
 
 /*
  * 这里定义的是一个文件保存的方法，写入到文件中，所以是输出流
  * */
-fun Activity.FileSave(mContext: Context, fileContent: String, filepath: String? = null, filename: String) {
+fun Activity.FileSave(mContext: Context = this.application, fileContent: String, filepath: String? = null, filename: String) {
     //这里我们使用私有模式,创建出来的文件只能被本应用访问,还会覆盖原文件哦
     if (Environment.getExternalStorageState() == Environment.MEDIA_MOUNTED) {
         val myExternalFile: File = File(mContext.getExternalFilesDir(filepath), filename)
