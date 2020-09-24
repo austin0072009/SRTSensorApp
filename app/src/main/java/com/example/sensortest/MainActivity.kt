@@ -52,10 +52,10 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
         sManager.registerListener(this, mSensorAccelerometer, SensorManager.SENSOR_DELAY_UI)
         sManager.registerListener(this, mGyroscope, SensorManager.SENSOR_DELAY_UI)
         //Data sending construct
-        bindViews()
+        BindViews()
     }
 
-    private fun bindViews() {
+    private fun BindViews() {
         tv_step = findViewById<View>(R.id.tv_step) as TextView
         tv_step2 = findViewById<View>(R.id.tv_step2) as TextView
         tv_step3 = findViewById<View>(R.id.tv_step3) as TextView
