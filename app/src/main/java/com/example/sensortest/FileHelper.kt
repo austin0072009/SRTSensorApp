@@ -6,6 +6,7 @@ import android.os.Environment
 import android.widget.Toast
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import org.jetbrains.anko.toast
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
@@ -28,12 +29,12 @@ fun Activity.FileSave(mContext: Context = this.application, fileContent: String,
             val fileOutPutStream = FileOutputStream(myExternalFile)
             fileOutPutStream.write(fileContent.toByteArray())
             fileOutPutStream.close()
-            Toast.makeText(mContext, "数据写入成功", Toast.LENGTH_SHORT).show()
+            mContext.toast("数据写入成功")
         } catch (e: IOException) {
             e.printStackTrace()
-            Toast.makeText(mContext, "数据写入失败", Toast.LENGTH_SHORT).show()
+            mContext.toast("数据写入失败")
         }
-    } else Toast.makeText(mContext, "SD卡不存在或者不可读写", Toast.LENGTH_SHORT).show()
+    } else mContext.toast("SD卡不存在或者不可读写")
 }
 
 /*
