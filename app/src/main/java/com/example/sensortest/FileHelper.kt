@@ -24,7 +24,7 @@ fun Activity.FileSave(mContext: Context, fileContent: String, filepath: String? 
     if (Environment.getExternalStorageState() == Environment.MEDIA_MOUNTED) {
         val myExternalFile: File = File(mContext.getExternalFilesDir(filepath), filename)
         try {
-            verifyStoragePermissions(this)
+            verifyStoragePermissions()
             val fileOutPutStream = FileOutputStream(myExternalFile)
             fileOutPutStream.write(fileContent.toByteArray())
             fileOutPutStream.close()
