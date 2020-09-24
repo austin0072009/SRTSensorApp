@@ -10,12 +10,12 @@ private val PERMISSIONS_STORAGE = arrayOf(
         Manifest.permission.READ_EXTERNAL_STORAGE,
         Manifest.permission.WRITE_EXTERNAL_STORAGE)
 
-fun verifyStoragePermissions(activity: Activity?) {
+fun Activity.verifyStoragePermissions() {
     // Check if we have write permission
-    if (ActivityCompat.checkSelfPermission(activity!!,
+    if (ActivityCompat.checkSelfPermission(this,
                     Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
         // We don't have permission so prompt the user
-        ActivityCompat.requestPermissions(activity, PERMISSIONS_STORAGE,
+        ActivityCompat.requestPermissions(this, PERMISSIONS_STORAGE,
                 REQUEST_EXTERNAL_STORAGE)
     }
 }
