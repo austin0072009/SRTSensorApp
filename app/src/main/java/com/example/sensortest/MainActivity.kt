@@ -16,6 +16,7 @@ import androidx.appcompat.app.AppCompatActivity
 import threeDvector.Vec3D
 import java.text.DecimalFormat
 import java.util.*
+import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity(), SensorEventListener {
     private lateinit var sManager: SensorManager
@@ -23,16 +24,9 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
     private lateinit var mGyroscope: Sensor
 
     //private var mContext: Context? = null
-    private lateinit var tv_step: TextView
-    private lateinit var tv_step2: TextView
-    private lateinit var tv_step3: TextView
-    private lateinit var tv_Gstep: TextView
-    private lateinit var tv_Gstep2: TextView
-    private lateinit var tv_Gstep3: TextView
 
     //用来存数据
     //private Context mContext;
-    private lateinit var btn_start: Button
     private var step = 0 //步数
     private val sensorData_Acc = ArrayList<Vec3D>()
     private val sensorData_Gry = ArrayList<Vec3D>()
@@ -56,13 +50,6 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
     }
 
     private fun BindViews() {
-        tv_step = findViewById<View>(R.id.tv_step) as TextView
-        tv_step2 = findViewById<View>(R.id.tv_step2) as TextView
-        tv_step3 = findViewById<View>(R.id.tv_step3) as TextView
-        tv_Gstep = findViewById<View>(R.id.tv_Gstep1) as TextView
-        tv_Gstep2 = findViewById<View>(R.id.tv_Gstep2) as TextView
-        tv_Gstep3 = findViewById<View>(R.id.tv_Gstep3) as TextView
-        btn_start = findViewById<View>(R.id.btn_start) as Button
         btn_start.setOnClickListener{
             step = 0
             tv_step.text = "X: " + 0
