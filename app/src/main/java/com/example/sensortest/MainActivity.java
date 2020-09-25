@@ -34,6 +34,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private SensorManager sManager;
     private Sensor mSensorAccelerometer;
     private Sensor mGyroscope;
+    private Sensor mMagnetic;
     private Context mContext;
 
     private TextView tv_step;
@@ -44,6 +45,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private TextView tv_Gstep2;
     private TextView tv_Gstep3;
 
+    private TextView tv_Mstep;
+    private TextView tv_Mstep2;
+    private TextView tv_Mstep3;
+
     //用来存数据
     //private Context mContext;
 
@@ -52,6 +57,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private int step = 0;   //步数
     private ArrayList<Vec3D> sensorData_Acc = new ArrayList();
     private ArrayList<Vec3D> sensorData_Gry = new ArrayList();
+    private ArrayList<Vec3D> sensorData_Mag = new ArrayList();
 
 
     private double oriValue = 0;  //原始值
@@ -71,15 +77,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         mSensorAccelerometer = sManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         mGyroscope = sManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
+        mMagnetic = sManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
 
-        sManager.registerListener(this, mSensorAccelerometer, SensorManager.SENSOR_DELAY_UI);
-        sManager.registerListener(this, mGyroscope, SensorManager.SENSOR_DELAY_UI);
+
         //Data sending construct
         bindViews();
     }
 
     private void bindViews() {
 
+
+        //用于前端界面的数据展示
+        //for the UI design
         tv_step = (TextView) findViewById(R.id.tv_step);
         tv_step2 = (TextView) findViewById(R.id.tv_step2);
         tv_step3 = (TextView) findViewById(R.id.tv_step3);
@@ -87,6 +96,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         tv_Gstep = (TextView) findViewById(R.id.tv_Gstep1);
         tv_Gstep2 = (TextView) findViewById(R.id.tv_Gstep2);
         tv_Gstep3 = (TextView) findViewById(R.id.tv_Gstep3);
+
+        tv_Mstep = (TextView) findViewById(R.id.tv_Mstep1);
+        tv_Mstep2 = (TextView) findViewById(R.id.tv_Mstep2);
+        tv_Mstep3 = (TextView) findViewById(R.id.tv_Mstep3);
 
         btn_start = (Button) findViewById(R.id.btn_start);
         btn_start.setOnClickListener(this);
@@ -146,7 +159,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         } else if (sensor.getType() == Sensor.TYPE_GYROSCOPE) {
             float[] value = event.values;
             Vec3D tmpVec = new Vec3D(value[0], value[1], value[2]);
-            curValue = tmpVec.getMagnitude();   //计算当前的模
             DecimalFormat df = new DecimalFormat("######0.00");  //print two decimal number
             if (processState == true) {
                 tv_Gstep.setText("X: " + df.format(tmpVec.getX()));
@@ -154,6 +166,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 tv_Gstep3.setText("Z: " + df.format(tmpVec.getZ()));
                 sensorData_Gry.add(tmpVec);
             }
+        }
+        else if (sensor.getType() == Sensor.TYPE_MAGNETIC_FIELD) {
+            float[] value = event.values;
+            Vec3D tmpVec = new Vec3D(value[0], value[1], value[2]);
+            DecimalFormat df = new DecimalFormat("######0.00");  //print two decimal number
+            if (processState == true) {
+                tv_Mstep.setText("X: " + df.format(tmpVec.getX()));
+                tv_Mstep2.setText("Y: " + df.format(tmpVec.getY()));
+                tv_Mstep3.setText("Z: " + df.format(tmpVec.getZ()));
+                sensorData_Mag.add(tmpVec);
+            }
+
         }
     }
 
@@ -176,6 +200,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         tv_Gstep2.setText("Y: " + 0);
         tv_Gstep3.setText("Z: " + 0);
 
+        tv_Mstep.setText("X: " + 0);
+        tv_Mstep2.setText("Y: " + 0);
+        tv_Mstep3.setText("Z: " + 0);
 
         if (processState == true) {
 
@@ -184,8 +211,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             //写入数据
 
-            FileHelperKt.FileSave(this, mContext, FileHelperKt.serialize(sensorData_Acc,sensorData_Gry), null, "SensorDataRecord.JSON");
+            FileHelperKt.FileSave(this, mContext, FileHelperKt.serialize(sensorData_Acc,sensorData_Gry,sensorData_Mag), null, "SensorDataRecord.JSON");
+
+            //关闭传感器，停止记录数据
+            sManager.unregisterListener(this);
+            sensorData_Acc.clear();
+            sensorData_Gry.clear();
+            sensorData_Mag.clear();
+
         } else {
+
+            sManager.registerListener(this, mSensorAccelerometer, SensorManager.SENSOR_DELAY_UI);
+            sManager.registerListener(this, mGyroscope, SensorManager.SENSOR_DELAY_UI);
+            sManager.registerListener(this, mMagnetic, SensorManager.SENSOR_DELAY_UI);
+
             btn_start.setText("停止");
             processState = true;
 
