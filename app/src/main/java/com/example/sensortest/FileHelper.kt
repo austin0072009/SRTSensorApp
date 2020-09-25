@@ -27,7 +27,7 @@ fun Activity.FileSave(fileContent: String, filepath: String? = null, filename: S
         val myExternalFile: File = File(getExternalFilesDir(filepath), filename)
         try {
             verifyStoragePermissions()
-            val fileOutPutStream = FileOutputStream(myExternalFile)
+            val fileOutPutStream = FileOutputStream(myExternalFile, filename)
             fileOutPutStream.write(fileContent.toByteArray())
             fileOutPutStream.close()
             applicationContext.toast("数据写入成功")      //直接省略写toast即this.toast也是可以的，但是可能会内存外泄
