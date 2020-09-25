@@ -12,19 +12,23 @@ import android.os.PowerManager
 import kotlinx.android.synthetic.main.activity_main.*
 import threeDvector.Vec3D
 import java.text.DecimalFormat
+import java.util.ArrayList
 
 class SensorRecord : Service(), SensorEventListener {
     private lateinit var sensorManager: SensorManager
     private lateinit var powerManager: PowerManager
     private lateinit var m_wkik: PowerManager.WakeLock
 
+    private val sensorData_Acc = ArrayList<Vec3D>()
+    private val sensorData_GRV = ArrayList<Vec3D>()
+
     override fun onCreate() {
         super.onCreate()
         sensorManager = applicationContext.getSystemService(Context.SENSOR_SERVICE) as SensorManager
         val sensorAcc = sensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION)
-        val sensorGry = sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE)
+        val sensorGRV = sensorManager.getDefaultSensor(Sensor.TYPE_GAME_ROTATION_VECTOR)
         sensorManager.registerListener(this, sensorAcc, SensorManager.SENSOR_DELAY_NORMAL)
-        sensorManager.registerListener(this, sensorGry, SensorManager.SENSOR_DELAY_NORMAL)
+        sensorManager.registerListener(this, sensorGRV, SensorManager.SENSOR_DELAY_NORMAL)
 
         powerManager = applicationContext.getSystemService(Context.POWER_SERVICE) as PowerManager
         m_wkik = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK,SensorRecord::class.qualifiedName)
@@ -42,9 +46,11 @@ class SensorRecord : Service(), SensorEventListener {
             Sensor.TYPE_LINEAR_ACCELERATION -> {
                 //Data Receive from sensor
                 val tmpVec = Vec3D(event.values)
+                sensorData_Acc.add(tmpVec)
             }
-            Sensor.TYPE_GYROSCOPE -> {
+            Sensor.TYPE_GAME_ROTATION_VECTOR -> {
                 val tmpVec = Vec3D(event.values)
+                sensorData_GRV.add(tmpVec)
             }
         }
     }
