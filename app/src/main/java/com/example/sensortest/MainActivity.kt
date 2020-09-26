@@ -17,11 +17,11 @@ class MainActivity : AppCompatActivity() {
     private fun BindViews() {
         btn_start.setOnClickListener {
             if (processState) {
-                val startIntent = Intent(this@MainActivity, SensorRecord::class.java)
+                val startIntent = Intent(this, SensorRecord::class.java)
                 startService(startIntent)
                 btn_start.text = "停止"
             } else {
-                val stopIntent = Intent(this@MainActivity, SensorRecord::class.java)
+                val stopIntent = Intent(this, SensorRecord::class.java)
                 stopService(stopIntent)
                 btn_start.text = "开始记录数据"
             }
