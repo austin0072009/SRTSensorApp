@@ -46,10 +46,10 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        //BindViews()
+        BindViews()
     }
 
-    override fun onStart() {
+    /*override fun onStart() {
         super.onStart()
         // Bind to LocalService
         Intent(this, SensorRecord::class.java).also { intent ->
@@ -63,22 +63,21 @@ class MainActivity : AppCompatActivity() {
         super.onStop()
         unbindService(connection)
         mBound = false
-    }
+    }*/
 
     private fun BindViews() {
         btn_start.setOnClickListener {
             if (processState) {
-                Intent(this, SensorRecord::class.java).also { intent ->
-                    bindService(intent, connection, Context.BIND_AUTO_CREATE)
-                }
-                //startService(startIntent)
+                val intent=Intent(this, SensorRecord::class.java)
+                startService(intent)
+                bindService(intent, connection, Context.BIND_AUTO_CREATE)
                 mService.currentAcc.observe(this,AccObserver)
                 mService.currentGRV.observe(this,GRVObserver)
                 btn_start.text = "停止"
             } else {
-                //val stopIntent = Intent(this, SensorRecord::class.java)
-                //stopService(stopIntent)
+                intent = Intent(this, SensorRecord::class.java)
                 unbindService(connection)
+                stopService(intent)
                 btn_start.text = "开始记录数据"
                 mBound = false
             }
