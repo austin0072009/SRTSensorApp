@@ -10,16 +10,19 @@ import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
+import android.os.Binder
 import android.os.Build
 import android.os.IBinder
 import android.os.PowerManager
 import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
+import androidx.lifecycle.MutableLiveData
 import threeDvector.Vec3D
 import java.util.*
 
 
 class SensorRecord : Service(), SensorEventListener {
+    private val binder= LocalBinder()
     private lateinit var sensorManager: SensorManager
     private lateinit var powerManager: PowerManager
     private lateinit var m_wkik: PowerManager.WakeLock
@@ -27,8 +30,18 @@ class SensorRecord : Service(), SensorEventListener {
     private val sensorData_Acc = ArrayList<Vec3D>()
     private val sensorData_GRV = ArrayList<Vec3D>()
     private var i = 0
+    val currentAcc: MutableLiveData<Vec3D> by lazy {
+        MutableLiveData<Vec3D>()
+    }
+    val currentGRV: MutableLiveData<Vec3D> by lazy {
+        MutableLiveData<Vec3D>()
+    }
 
-    @RequiresApi(Build.VERSION_CODES.O)
+    inner class LocalBinder : Binder() {
+        // Return this instance of LocalService so clients can call public methods
+        fun getService(): SensorRecord = this@SensorRecord
+    }
+
     override fun onCreate() {
         super.onCreate()
         sensorManager = applicationContext.getSystemService(Context.SENSOR_SERVICE) as SensorManager
@@ -48,7 +61,7 @@ class SensorRecord : Service(), SensorEventListener {
         return super.onStartCommand(intent, flags, startId)
     }
 
-    override fun onBind(intent: Intent?): IBinder? = null
+    override fun onBind(intent: Intent?): IBinder = binder
 
     override fun onUnbind(intent: Intent?): Boolean {
         return super.onUnbind(intent)
@@ -65,6 +78,7 @@ class SensorRecord : Service(), SensorEventListener {
             Sensor.TYPE_LINEAR_ACCELERATION -> {
                 //Data Receive from sensor
                 val tmpVec = Vec3D(event.values)
+                currentAcc.value = tmpVec
                 sensorData_Acc.add(tmpVec)
                 if (sensorData_Acc.size == 300) {
                     FileSave(fileContent = serialize(sensorData_Acc), filename = "SensorRecord${i}.JSON")
@@ -74,6 +88,7 @@ class SensorRecord : Service(), SensorEventListener {
             }
             Sensor.TYPE_GAME_ROTATION_VECTOR -> {
                 val tmpVec = Vec3D(event.values)
+                currentAcc.value = tmpVec
                 sensorData_GRV.add(tmpVec)
             }
         }
