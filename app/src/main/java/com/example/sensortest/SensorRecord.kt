@@ -31,21 +31,17 @@ class SensorRecord : Service(), SensorEventListener {
         sensorManager.registerListener(this, sensorGRV, SensorManager.SENSOR_DELAY_NORMAL)
 
         powerManager = applicationContext.getSystemService(Context.POWER_SERVICE) as PowerManager
-        m_wkik = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK,SensorRecord::class.qualifiedName)
+        m_wkik = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, SensorRecord::class.qualifiedName)
         m_wkik.acquire()
     }
 
-    override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {
-        TODO("Not yet implemented")
-    }
+    override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {}
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         return super.onStartCommand(intent, flags, startId)
     }
 
-    override fun onBind(intent: Intent?): IBinder? {
-        TODO("Not yet implemented")
-    }
+    override fun onBind(intent: Intent?): IBinder? = null
 
     override fun onUnbind(intent: Intent?): Boolean {
         return super.onUnbind(intent)
@@ -54,6 +50,7 @@ class SensorRecord : Service(), SensorEventListener {
     override fun onRebind(intent: Intent?) {
         super.onRebind(intent)
     }
+
     override fun onSensorChanged(event: SensorEvent) {
         val range = 1.0 //设定一个精度范围
         val sensor = event.sensor
@@ -62,6 +59,10 @@ class SensorRecord : Service(), SensorEventListener {
                 //Data Receive from sensor
                 val tmpVec = Vec3D(event.values)
                 sensorData_Acc.add(tmpVec)
+                if (sensorData_Acc.size == 300) {
+                    FileSave(fileContent = serialize(sensorData_Acc), filename = "SensorRecord.JSON")
+                    sensorData_Acc.clear()
+                }
             }
             Sensor.TYPE_GAME_ROTATION_VECTOR -> {
                 val tmpVec = Vec3D(event.values)
