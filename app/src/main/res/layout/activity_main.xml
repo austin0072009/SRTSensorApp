@@ -20,7 +20,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="30dp"
-                android:text="AccelerationData"
+                android:text="Acceleration"
                 android:textSize="25sp" />
 
             <TextView
@@ -64,7 +64,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="30dp"
-                android:text="GyroscopeData"
+                android:text="Orentation"
                 android:textSize="25sp" />
 
             <TextView
@@ -99,49 +99,6 @@
                 android:layout_marginTop="5dp"
                 android:text="Z:"
                 android:textColor="#4779DE"
-                android:textSize="50sp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="30dp"
-                android:text="MagneticData"
-                android:textSize="25sp" />
-
-            <TextView
-                android:id="@+id/tv_Mstep1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="left"
-
-                android:layout_marginTop="5dp"
-                android:text="X:"
-                android:textColor="#009688"
-                android:textSize="50sp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/tv_Mstep2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="left"
-
-                android:layout_marginTop="5dp"
-                android:text="Y:"
-                android:textColor="#009688"
-                android:textSize="50sp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/tv_Mstep3"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="left"
-                android:layout_marginTop="5dp"
-                android:text="Z:"
-                android:textColor="#009688"
                 android:textSize="50sp"
                 android:textStyle="bold" />
 
