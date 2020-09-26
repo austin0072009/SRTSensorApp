@@ -29,7 +29,6 @@ class SensorRecord : Service(), SensorEventListener {
 
     private val sensorData_Acc = ArrayList<Vec3D>()
     private val sensorData_GRV = ArrayList<Vec3D>()
-    private var i = 0
     val currentAcc: MutableLiveData<Vec3D> by lazy {
         MutableLiveData<Vec3D>()
     }
@@ -81,14 +80,13 @@ class SensorRecord : Service(), SensorEventListener {
                 currentAcc.value = tmpVec
                 sensorData_Acc.add(tmpVec)
                 if (sensorData_Acc.size == 300) {
-                    FileSave(fileContent = serialize(sensorData_Acc), filename = "SensorRecord${i}.JSON")
+                    //FileSave(fileContent = serialize(sensorData_Acc), filename = "SensorRecord${i}.JSON")
                     sensorData_Acc.clear()
-                    i += 1
                 }
             }
             Sensor.TYPE_GAME_ROTATION_VECTOR -> {
                 val tmpVec = Vec3D(event.values)
-                currentAcc.value = tmpVec
+                currentGRV.value = tmpVec
                 sensorData_GRV.add(tmpVec)
             }
         }
