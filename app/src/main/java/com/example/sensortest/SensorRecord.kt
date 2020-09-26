@@ -5,7 +5,7 @@ import android.app.Notification
 import android.app.Service
 import android.content.Context
 import android.content.Intent
-import android.graphics.BitmapFactory
+import android.graphics.drawable.BitmapDrawable
 import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
@@ -14,6 +14,7 @@ import android.os.Build
 import android.os.IBinder
 import android.os.PowerManager
 import androidx.annotation.RequiresApi
+import androidx.core.app.NotificationCompat
 import threeDvector.Vec3D
 import java.util.*
 
@@ -25,7 +26,7 @@ class SensorRecord : Service(), SensorEventListener {
 
     private val sensorData_Acc = ArrayList<Vec3D>()
     private val sensorData_GRV = ArrayList<Vec3D>()
-    private var i=0
+    private var i = 0
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate() {
@@ -68,7 +69,7 @@ class SensorRecord : Service(), SensorEventListener {
                 if (sensorData_Acc.size == 300) {
                     FileSave(fileContent = serialize(sensorData_Acc), filename = "SensorRecord${i}.JSON")
                     sensorData_Acc.clear()
-                    i+=1
+                    i += 1
                 }
             }
             Sensor.TYPE_GAME_ROTATION_VECTOR -> {
