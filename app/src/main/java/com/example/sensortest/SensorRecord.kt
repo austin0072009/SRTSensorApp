@@ -1,18 +1,22 @@
 package com.example.sensortest
 
+import android.R
+import android.app.Notification
 import android.app.Service
 import android.content.Context
 import android.content.Intent
+import android.graphics.BitmapFactory
 import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
+import android.os.Build
 import android.os.IBinder
 import android.os.PowerManager
-import kotlinx.android.synthetic.main.activity_main.*
+import androidx.annotation.RequiresApi
 import threeDvector.Vec3D
-import java.text.DecimalFormat
-import java.util.ArrayList
+import java.util.*
+
 
 class SensorRecord : Service(), SensorEventListener {
     private lateinit var sensorManager: SensorManager
@@ -21,7 +25,9 @@ class SensorRecord : Service(), SensorEventListener {
 
     private val sensorData_Acc = ArrayList<Vec3D>()
     private val sensorData_GRV = ArrayList<Vec3D>()
+    private var i=0
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate() {
         super.onCreate()
         sensorManager = applicationContext.getSystemService(Context.SENSOR_SERVICE) as SensorManager
@@ -60,8 +66,9 @@ class SensorRecord : Service(), SensorEventListener {
                 val tmpVec = Vec3D(event.values)
                 sensorData_Acc.add(tmpVec)
                 if (sensorData_Acc.size == 300) {
-                    FileSave(fileContent = serialize(sensorData_Acc), filename = "SensorRecord.JSON")
+                    FileSave(fileContent = serialize(sensorData_Acc), filename = "SensorRecord${i}.JSON")
                     sensorData_Acc.clear()
+                    i+=1
                 }
             }
             Sensor.TYPE_GAME_ROTATION_VECTOR -> {
