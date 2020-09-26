@@ -35,6 +35,8 @@ class MainActivity : AppCompatActivity() {
             // We've bound to LocalService, cast the IBinder and get LocalService instance
             val binder = service as SensorRecord.LocalBinder
             mService = binder.getService()
+            mService.currentAcc.observe(this@MainActivity,AccObserver)
+            mService.currentGRV.observe(this@MainActivity,GRVObserver)
             mBound = true
         }
 
@@ -69,13 +71,14 @@ class MainActivity : AppCompatActivity() {
         btn_start.setOnClickListener {
             if (processState) {
                 val intent=Intent(this, SensorRecord::class.java)
+                intent.setAction("com.example.server.SensorRecord")
                 startService(intent)
                 bindService(intent, connection, Context.BIND_AUTO_CREATE)
-                mService.currentAcc.observe(this,AccObserver)
-                mService.currentGRV.observe(this,GRVObserver)
+
                 btn_start.text = "停止"
             } else {
-                intent = Intent(this, SensorRecord::class.java)
+                val intent = Intent(this, SensorRecord::class.java)
+                intent.setAction("com.example.server.SensorRecord")
                 unbindService(connection)
                 stopService(intent)
                 btn_start.text = "开始记录数据"

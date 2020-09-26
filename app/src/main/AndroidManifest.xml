@@ -23,7 +23,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <service android:name=".SensorRecord" android:process="system">
+        <service android:name=".SensorRecord">
             <intent-filter>
                 <action android:name="com.example.server.SensorRecord"/>
             </intent-filter>
