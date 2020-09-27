@@ -51,6 +51,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         if (ServiceCheckUtil.isRunning(applicationContext, SensorRecord::class.qualifiedName)) {
+            //若SensorRecord已在运行，绑定并更改相应设置
             processState = true
             val intent = Intent(this, SensorRecord::class.java)
             intent.setAction("com.example.server.SensorRecord")
