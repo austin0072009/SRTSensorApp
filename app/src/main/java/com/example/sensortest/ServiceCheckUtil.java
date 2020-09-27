@@ -5,6 +5,7 @@ import android.content.Context;
 
 import java.util.List;
 
+//检查Service是否已经在运行
 public class ServiceCheckUtil {
     public static boolean isRunning(Context context, String serviceName) {
         // 获取Activity管理者对象
