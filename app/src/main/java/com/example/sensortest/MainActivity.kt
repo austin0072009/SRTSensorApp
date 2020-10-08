@@ -15,7 +15,22 @@ import java.text.DecimalFormat
 
 
 class MainActivity : AppCompatActivity() {
-
+    val df = DecimalFormat("####0.00")
+    val AccObserver = Observer<Vec3D> {
+        tv_step.text = "X: " + df.format(it.x)
+        tv_step2.text = "Y: " + df.format(it.y)
+        tv_step3.text = "Z: " + df.format(it.z)
+    }
+    val GRVObserver = Observer<Vec3D> {
+        tv_Gstep.text = "X: " + df.format(it.x)
+        tv_Gstep2.text = "Y: " + df.format(it.y)
+        tv_Gstep3.text = "Z: " + df.format(it.z)
+    }
+    var processState = false
+    
+    private lateinit var mService: SensorRecord
+    private var mBound: Boolean = false
+    private val connection = object : ServiceConnection {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
