@@ -29,6 +29,8 @@ class SensorRecord : Service(), SensorEventListener {
 
     private val sensorData_Acc = ArrayList<Vec3D>()
     private val sensorData_GRV = ArrayList<Vec3D>()
+    private val sensorData_Mag = ArrayList<Vec3D>()
+
     val currentAcc: MutableLiveData<Vec3D> by lazy {
         MutableLiveData<Vec3D>()
     }
@@ -73,6 +75,7 @@ class SensorRecord : Service(), SensorEventListener {
     override fun onSensorChanged(event: SensorEvent) {
         val range = 1.0 //设定一个精度范围
         val sensor = event.sensor
+
         when (sensor.type) {
             Sensor.TYPE_LINEAR_ACCELERATION -> {
                 //Data Receive from sensor

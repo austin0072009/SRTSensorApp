@@ -32,31 +32,11 @@ class MainActivity : AppCompatActivity() {
     private var mBound: Boolean = false
     private val connection = object : ServiceConnection {
 
-        override fun onServiceConnected(className: ComponentName, service: IBinder) {
-            // We've bound to LocalService, cast the IBinder and get LocalService instance
-            val binder = service as SensorRecord.LocalBinder
-            mService = binder.getService()
-            mService.currentAcc.observe(this@MainActivity, AccObserver)
-            mService.currentGRV.observe(this@MainActivity, GRVObserver)
-            mBound = true
-        }
-
-        override fun onServiceDisconnected(arg0: ComponentName) {
-            mBound = false
-        }
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        if (ServiceCheckUtil.isRunning(applicationContext, SensorRecord::class.qualifiedName)) {
-            //若SensorRecord已在运行，绑定并更改相应设置
-            processState = true
-            val intent = Intent(this, SensorRecord::class.java)
-            intent.setAction("com.example.server.SensorRecord")
-            bindService(intent, connection, Context.BIND_AUTO_CREATE)
-        }
-        BindViews()
+
+        Btn_listener()
     }
 
     /*override fun onStart() {
@@ -75,31 +55,18 @@ class MainActivity : AppCompatActivity() {
         mBound = false
     }*/
 
-    private fun BindViews() {
-        btn_start.text = if (processState) "停止" else "开始记录数据"
-        btn_start.setOnClickListener {
-            if (processState) {
-                val intent = Intent(this, SensorRecord::class.java)
-                intent.setAction("com.example.server.SensorRecord")
-                unbindService(connection)
-                stopService(intent)
-                btn_start.text = "开始记录数据"
-                mBound = false
-            } else {
-                val intent = Intent(this, SensorRecord::class.java)
-                intent.setAction("com.example.server.SensorRecord")
-                startService(intent)
-                bindService(intent, connection, Context.BIND_AUTO_CREATE)
 
-                btn_start.text = "停止"
-            }
-            processState = !processState
+    fun Btn_listener()
+    {
+        Btn_1.setOnClickListener {
+            val intent = Intent();
+            intent.setClass( this , Raw_data_function::class.java)
+            startActivity(intent)
         }
-
-
     }
-
     override fun onDestroy() {
         super.onDestroy()
     }
 }
+
+
