@@ -27,8 +27,7 @@ class MainActivity : AppCompatActivity() {
         tv_Gstep3.text = "Z: " + df.format(it.z)
     }
     var processState = false
-
-
+    
     private lateinit var mService: SensorRecord
     private var mBound: Boolean = false
     private val connection = object : ServiceConnection {
