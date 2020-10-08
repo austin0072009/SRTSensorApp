@@ -13,11 +13,7 @@ steps:
     publishJUnitResults: false
     testResultsFiles: '**/TEST-*.xml'
     tasks: 'assembleDebug'
-  
 - task: AndroidSigning@3
   inputs:
     apkFiles: 'app/release/Sensortest.apk'
-    apksignerKeystoreFile: 'hhh.jks'
-    apksignerKeystorePassword: 'that14key'
-    apksignerKeystoreAlias: 'key0'
-    apksignerKeyPassword: 'that14key'
+    apksign: false
