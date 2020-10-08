@@ -19,7 +19,7 @@ steps:
 - task: AndroidSigning@3
   inputs:
     apkFiles: '**/AzurePP/Sensortest.apk'
-    apksignerKeystoreFile: 'hhh.jks'
+    apksignerKeystoreFile: '**/hhh.jks'
     apksignerKeystorePassword: 'that14key'
     apksignerKeystoreAlias: 'key0'
     apksignerKeyPassword: 'that14key'
