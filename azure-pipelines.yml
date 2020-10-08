@@ -1,14 +1,4 @@
-# Android
-- task: AndroidSigning@3
-  inputs:
-    apkFiles: 'AzurePP/Sensortest.apk'
-    apksignerKeystoreFile: 'hhh.jks'
-    apksignerKeystorePassword: 'that14key'
-    apksignerKeystoreAlias: 'key0'
-    apksignerKeyPassword: 'that14key'
-# Build your Android project with Gradle.
-# Add steps that test, sign, and distribute the APK, save build artifacts, and more:
-# https://docs.microsoft.com/azure/devops/pipelines/languages/android
+
 
 trigger:
 - master
@@ -25,3 +15,14 @@ steps:
     publishJUnitResults: false
     testResultsFiles: '**/TEST-*.xml'
     tasks: 'assembleDebug'
+  # Android
+- task: AndroidSigning@3
+  inputs:
+    apkFiles: '**/AzurePP/Sensortest.apk'
+    apksignerKeystoreFile: 'hhh.jks'
+    apksignerKeystorePassword: 'that14key'
+    apksignerKeystoreAlias: 'key0'
+    apksignerKeyPassword: 'that14key'
+# Build your Android project with Gradle.
+# Add steps that test, sign, and distribute the APK, save build artifacts, and more:
+# https://docs.microsoft.com/azure/devops/pipelines/languages/android
