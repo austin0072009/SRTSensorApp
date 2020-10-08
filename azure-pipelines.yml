@@ -15,5 +15,5 @@ steps:
     tasks: 'assembleDebug'
 - task: AndroidSigning@3
   inputs:
-    apkFiles: 'app/release/Sensortest.apk'
+    apkFiles: 'AzurePP/Sensortest.apk'
     apksign: false
