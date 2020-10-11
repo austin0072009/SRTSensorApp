@@ -18,6 +18,7 @@ object BluetoothService {
     private lateinit var inputStream: InputStream
     private lateinit var socket: BluetoothSocket
 
+    val isConnected get() = this::socket.isInitialized && socket.isConnected
 
     suspend fun sendData(data: ByteArray, startBytes: ByteArray, untilBytes: ByteArray) =
             coroutineScope {
@@ -26,8 +27,6 @@ object BluetoothService {
                     listenData(startBytes, untilBytes = untilBytes)
                 }
             }
-
-    public fun connected() = this::socket.isInitialized && socket.isConnected
 
     private suspend fun listenData(
             startBytes: ByteArray,
