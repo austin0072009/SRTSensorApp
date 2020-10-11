@@ -85,4 +85,12 @@ object BluetoothService {
             }
         }
     }
+
+    suspend fun cancel() {
+        try {
+            socket?.close()
+        } catch (e: IOException) {
+            Log.e(TAG, "Could not close the client socket", e)
+        }
+    }
 }
