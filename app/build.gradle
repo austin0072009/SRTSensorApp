@@ -44,6 +44,7 @@ dependencies {
     implementation "org.jetbrains.anko:anko-commons:$anko_version"
     implementation "org.jetbrains.anko:anko-appcompat-v7:$anko_version"
     implementation "org.jetbrains.anko:anko-coroutines:$anko_version"
+    implementation "com.google.guava:guava:29.0-android"
 
     //   androidTestImplementation 'androidx.test.ext:junit:1.1.2'
  //   androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
