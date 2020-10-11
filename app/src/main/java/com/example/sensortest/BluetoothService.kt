@@ -14,6 +14,7 @@ import java.util.*
 object BluetoothService {
     private const val TAG = "BTCOMService"
     private val uuid: UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB")
+    private val bluetoothAdapter: BluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
     private lateinit var outputStream: OutputStream
     private lateinit var inputStream: InputStream
     private lateinit var socket: BluetoothSocket
@@ -68,7 +69,7 @@ object BluetoothService {
 
 
     suspend fun connectDevice(device: BluetoothDevice) {
-        BluetoothAdapter.getDefaultAdapter()?.cancelDiscovery()
+        bluetoothAdapter.cancelDiscovery()
         withContext(Dispatchers.IO) {
             socket = device.createInsecureRfcommSocketToServiceRecord(uuid)
             try {
