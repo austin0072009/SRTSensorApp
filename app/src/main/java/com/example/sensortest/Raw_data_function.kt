@@ -11,6 +11,10 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.Observer
 import kotlinx.android.synthetic.main.activity_raw_data_function.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import threeDvector.Vec3D
 import java.text.DecimalFormat
 
@@ -60,24 +64,32 @@ class Raw_data_function : AppCompatActivity() {
                     val device: BluetoothDevice =
                             intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE)!!
                     val deviceName = device.name
+                    if (device.name == TARGET_DEVICE_NAME) {
+                        bluetoothAdapter.cancelDiscovery();
+                        GlobalScope.launch { BluetoothService.connectDevice(device) }
+                        return
+                    }
                     val deviceHardwareAddress = device.address // MAC address
                 }
             }
         }
     }
-    private val bluetoothAdapter by lazy{BluetoothAdapter.getDefaultAdapter()}
-    private val TARGET_DEVICE_NAME="DESKTOP-Q4HJGK7"
+    private val bluetoothAdapter by lazy { BluetoothAdapter.getDefaultAdapter() }
+    private val TARGET_DEVICE_NAME = "DESKTOP-Q4HJGK7"
 
-    private fun getPairedDevices(): BluetoothDevice? {
+    private fun getPairedDevices(): Unit {
         // 获得和当前Android已经配对的蓝牙设备。
         val pairedDevices: Set<BluetoothDevice> = bluetoothAdapter.getBondedDevices()
         if (pairedDevices != null && pairedDevices.size > 0) {
             // 遍历
             for (device in pairedDevices) {
-                if (TextUtils.equals(TARGET_DEVICE_NAME, device.name)) return device
+                if (device.name == TARGET_DEVICE_NAME) {
+                    GlobalScope.launch { BluetoothService.connectDevice(device) }
+                    return
+                }
             }
         }
-        return null
+        bluetoothAdapter.startDiscovery()
     }
 
 
@@ -108,12 +120,7 @@ class Raw_data_function : AppCompatActivity() {
         btn_start.setOnClickListener {
             if (processState) {
                 //开启蓝牙
-                val device = getPairedDevices()
-                if (device == null) {
-                    bluetoothAdapter.startDiscovery()
-                } else {
-                    BluetoothService.connectDevice(device)
-                }
+                getPairedDevices()
 
                 val intent = Intent(this, SensorRecord::class.java)
                 intent.setAction("com.example.server.SensorRecord")
