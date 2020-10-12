@@ -84,7 +84,7 @@ class Raw_data_function : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_raw_data_function)
-        //蓝牙
+        //蓝牙,暂时默认蓝牙是开的，调试时请注意。。。下面这段从官方文档抄来的有暂时用不了
         /*if (bluetoothAdapter?.isEnabled == false) {
             val enableBtIntent = Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE)
             startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT)
@@ -113,7 +113,7 @@ class Raw_data_function : AppCompatActivity() {
                 } else {
                     BluetoothService.connectDevice(device)
                 }
-                
+
                 val intent = Intent(this, SensorRecord::class.java)
                 intent.setAction("com.example.server.SensorRecord")
                 unbindService(connection)
