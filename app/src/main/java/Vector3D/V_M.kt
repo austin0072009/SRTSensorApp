@@ -33,10 +33,13 @@ interface VecTor {
 
 fun dot(A: VecTor, B: VecTor): Double {
     var result: Double = 0.0
-    if (A.size!=B.size) throw IllegalArgumentException("The two vectors must be identical.")
+    if (A.size != B.size) throw IllegalArgumentException("The two vectors must be identical.")
     for (i in 0 until A.size)
         result += A[i] * B[i]
     return result
 }
+
+fun MiddleAngle(Ort0:Vec3D,Ort1:Vec3D,a:Double):Vec3D {}
+fun Rotate(X: Vec3D, Angle: Vec3D): Vec3D {}
 
 
