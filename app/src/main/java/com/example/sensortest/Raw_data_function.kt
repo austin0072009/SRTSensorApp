@@ -80,15 +80,14 @@ class Raw_data_function : AppCompatActivity() {
         // 获得和当前Android已经配对的蓝牙设备。
         val pairedDevices: Set<BluetoothDevice> = bluetoothAdapter.getBondedDevices()
         if (pairedDevices != null && pairedDevices.size > 0) {
-            // 遍历
             for (device in pairedDevices) {
                 if (device.name == TARGET_DEVICE_NAME) {
+                    applicationContext.toast("蓝牙已开启")
                     GlobalScope.launch { BluetoothService.connectDevice(device) }
                     return
                 }
             }
         }
-        applicationContext.toast("蓝牙已开启")
         bluetoothAdapter.startDiscovery()
     }
 
