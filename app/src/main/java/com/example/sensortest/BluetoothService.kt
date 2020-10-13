@@ -86,7 +86,7 @@ object BluetoothService {
         }
     }
 
-    suspend fun cancel() {
+    fun cancel() {
         try {
             socket?.close()
         } catch (e: IOException) {
