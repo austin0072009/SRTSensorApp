@@ -127,7 +127,7 @@ class Raw_data_function : AppCompatActivity() {
             } else {
                 //开启蓝牙
                 getPairedDevices()
-                
+
                 val intent = Intent(this, SensorRecord::class.java)
                 intent.setAction("com.example.server.SensorRecord")
                 startService(intent)
