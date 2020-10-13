@@ -12,6 +12,7 @@ import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.Observer
 import kotlinx.android.synthetic.main.activity_raw_data_function.*
 import kotlinx.coroutines.*
+import org.jetbrains.anko.toast
 import threeDvector.Vec3D
 import java.text.DecimalFormat
 
@@ -63,6 +64,7 @@ class Raw_data_function : AppCompatActivity() {
                     val deviceName = device.name
                     if (device.name == TARGET_DEVICE_NAME) {
                         bluetoothAdapter.cancelDiscovery();
+                        applicationContext.toast("蓝牙已开启")
                         GlobalScope.launch { BluetoothService.connectDevice(device) }
                         return
                     }
@@ -86,6 +88,7 @@ class Raw_data_function : AppCompatActivity() {
                 }
             }
         }
+        applicationContext.toast("蓝牙已开启")
         bluetoothAdapter.startDiscovery()
     }
 
