@@ -122,6 +122,9 @@ class Raw_data_function : AppCompatActivity() {
                 intent.setAction("com.example.server.SensorRecord")
                 unbindService(connection)
                 stopService(intent)
+                //关闭蓝牙
+                BluetoothService.cancel()
+
                 btn_start.text = "开始记录数据"
                 mBound = false
             } else {
