@@ -44,6 +44,7 @@ class SensorRecord : Service(), SensorEventListener {
         fun getService(): SensorRecord = this@SensorRecord
     }
 
+    //速度计算
     private object SpeedCaculator {
         private var lastT_Acc: Long = 0
         private var lastT_GRV: Long = 0
@@ -72,7 +73,7 @@ class SensorRecord : Service(), SensorEventListener {
         private inline fun AccX_update(time: Long, Acc: Vec3D) {
             if (lastAccX != null) {
                 Speed += (lastAccX!! + AccX) * ((time - lastT_AccX).toDouble() / 2000.0)
-                currentSpeed = speed
+                currentSpeed = Speed
             }
             lastT_AccX = time
             lastAccX = Acc
