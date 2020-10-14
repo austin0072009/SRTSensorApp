@@ -45,7 +45,7 @@ class SensorRecord : Service(), SensorEventListener {
     }
 
     //速度计算
-    private object SpeedCaculator {
+    private val SpeedCaculator = object {
         private var lastT_Acc: Long = 0
         private var lastT_GRV: Long = 0
         private var lastT_AccX: Long = 0
@@ -55,10 +55,11 @@ class SensorRecord : Service(), SensorEventListener {
         private var lastGRV: Vec3D? = null
         private lateinit var AccX: Vec3D //已经转换坐标系的加速度
         private val Speed = Vec3D() //目前初始为0
+        private val sensorData_Speed = ArrayList<Vec3D>()
 
         fun GRV_Update(time: Long, GRV: Vec3D) {
             if (lastGRV != null && lastAcc != null && lastT_GRV <= lastT_Acc) {
-                AccX = Rotate(lastAcc!!, MiddleAngle(lastGRV!!, GRV, (lastT_Acc - lastT_GRV).toDouble() / (time - lastT_GRV).toDouble());
+                AccX = lastAcc!!.Rotate(MiddleAngle(lastGRV!!, GRV, (lastT_Acc - lastT_GRV).toDouble() / (time - lastT_GRV).toDouble()));
                 Acc_Update(lastT_Acc, AccX)
             }
             lastT_GRV = time
@@ -73,7 +74,7 @@ class SensorRecord : Service(), SensorEventListener {
         private inline fun AccX_update(time: Long, Acc: Vec3D) {
             if (lastAccX != null) {
                 Speed += (lastAccX!! + AccX) * ((time - lastT_AccX).toDouble() / 2000.0)
-                //currentSpeed = Speed
+                currentSpeed.value = Speed
             }
             lastT_AccX = time
             lastAccX = Acc

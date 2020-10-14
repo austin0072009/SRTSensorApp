@@ -114,15 +114,15 @@ class AxisAngle(val angle: Double, val x: Double, val y: Double, val z: Double) 
     fun toQuaternion() = Quaternion(x * sin(angle / 2), y * sin(angle / 2), z * sin(angle / 2))
     fun toRotationMatrix(): Matrix3D {
         val result = Matrix3D()
-        result[0, 0] = 1 - 2 * qy * qy - 2 * qz * qz
-        result[0, 1] = 2 * qx * qy - 2 * qz * qw
-        result[0, 2] = 2 * qx * qz + 2 * qy * qw
-        result[1, 0] = 2 * qx * qy + 2 * qz * qw
-        result[1, 1] = 1 - 2 * qx * qx - 2 * qz * qz
-        result[1, 2] = 2 * qy * qz - 2 * qx * qw
-        result[2, 0] = 2 * qx * qz - 2 * qy * qw
-        result[2, 1] = 2 * qy * qz + 2 * qx * qw
-        result[2, 2] = 1 - 2 * qx * qx - 2 * qy * qy
+        result[0, 0] = cos(angle) + x * x * (1 - cos(angle))
+        result[0, 1] = -z * sin(angle) + x * y * (1 - cos(angle))
+        result[0, 2] = y * sin(angle) + x * z * (1 - cos(angle))
+        result[1, 0] = z * sin(angle) + x * y * (1 - cos(angle))
+        result[1, 1] = cos(angle) + y * y * (1 - cos(angle))
+        result[1, 2] = -x * sin(angle) + y * z * (1 - cos(angle))
+        result[2, 0] = -y * sin(angle) + x * z * (1 - cos(angle))
+        result[2, 1] = x * sin(angle) + y * z * (1 - cos(angle))
+        result[2, 2] = cos(angle) + z * z * (1 - cos(angle))
         return result
     }
 }
@@ -131,9 +131,9 @@ class AxisAngle(val angle: Double, val x: Double, val y: Double, val z: Double) 
 fun MiddleAngle(Ort0: Vec3D, Ort1: Vec3D, a: Double): Matrix3D {
     val R0 = Quaternion(Ort0).toRotationMatrix()
     val R1 = Quaternion(Ort1).toRotationMatrix()
-    return ((R1*R0.transpose).toQuaternion().toAxisAngle()*a).toRotationMatrix()*R0
+    return ((R1 * R0.transpose).toQuaternion().toAxisAngle() * a).toRotationMatrix() * R0
 }
 
-inline fun Rotate(X: Vec3D, R: Matrix3D) = R * X
+inline fun Vec3D.Rotate(R: Matrix3D) = R * this
 
 
