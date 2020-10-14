@@ -14,6 +14,7 @@ import android.os.*
 import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
 import androidx.lifecycle.MutableLiveData
+import kotlinx.coroutines.*
 import threeDvector.MiddleAngle
 import threeDvector.Rotate
 import threeDvector.Vec3D
@@ -57,10 +58,12 @@ class SensorRecord : Service(), SensorEventListener {
         private val Speed = Vec3D() //目前初始为0
         private val sensorData_Speed = ArrayList<Vec3D>()
 
-        fun GRV_Update(time: Long, GRV: Vec3D) {
+        suspend fun GRV_Update(time: Long, GRV: Vec3D) {
             if (this::lastGRV.isInitialized && this::lastAcc.isInitialized && lastT_GRV <= lastT_Acc) {
-                AccX = lastAcc.Rotate(MiddleAngle(lastGRV, GRV, (lastT_Acc - lastT_GRV).toDouble() / (time - lastT_GRV).toDouble()));
-                AccX_Update(lastT_Acc, AccX)
+                withContext(Dispatchers.Default) {
+                    AccX = lastAcc.Rotate(MiddleAngle(lastGRV, GRV, (lastT_Acc - lastT_GRV).toDouble() / (time - lastT_GRV).toDouble()));
+                    AccX_Update(lastT_Acc, AccX)
+                }
             }
             lastT_GRV = time
             lastGRV = GRV
@@ -71,7 +74,7 @@ class SensorRecord : Service(), SensorEventListener {
             lastAcc = Acc
         }
 
-        private fun AccX_Update(time: Long, Acc: Vec3D) {
+        private fun AccX_Update(time: Long, Acc: Vec3D) = {
             if (this::lastAccX.isInitialized) {
                 Speed += (lastAccX + AccX) * ((time - lastT_AccX).toDouble() / 2000.0)
                 currentSpeed.value = Speed
@@ -124,7 +127,7 @@ class SensorRecord : Service(), SensorEventListener {
             Sensor.TYPE_GAME_ROTATION_VECTOR -> {
                 val tmpVec = Vec3D(event.values)
                 //currentGRV.value = tmpVec
-                SpeedCaculator.GRV_Update(System.currentTimeMillis(), tmpVec)
+                GlobalScope.launch { SpeedCaculator.GRV_Update(System.currentTimeMillis(), tmpVec) }
             }
         }
     }
