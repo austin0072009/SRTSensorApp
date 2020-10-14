@@ -54,7 +54,7 @@ class SensorRecord : Service(), SensorEventListener {
         private var lastAccX: Vec3D? = null
         private var lastGRV: Vec3D? = null
         private lateinit var AccX: Vec3D //已经转换坐标系的加速度
-        private val Speed = Vec3D(0, 0, 0)
+        private val Speed = Vec3D() //目前初始为0
 
         fun GRV_Update(time: Long, GRV: Vec3D) {
             if (lastGRV != null && lastAcc != null && lastT_GRV <= lastT_Acc) {
@@ -73,7 +73,7 @@ class SensorRecord : Service(), SensorEventListener {
         private inline fun AccX_update(time: Long, Acc: Vec3D) {
             if (lastAccX != null) {
                 Speed += (lastAccX!! + AccX) * ((time - lastT_AccX).toDouble() / 2000.0)
-                currentSpeed = Speed
+                //currentSpeed = Speed
             }
             lastT_AccX = time
             lastAccX = Acc

@@ -5,6 +5,52 @@ import java.lang.IllegalArgumentException
 import java.lang.Math.pow
 import kotlin.math.*
 
+class Matrix3D(val elements: DoubleArray = DoubleArray(9), var transposed: Boolean = false) {
+    constructor(M: Matrix3D) : this(M.elements.clone(), M.transposed)
+
+    val trace get() = this[1, 1] + this[2, 2] + this[3, 3]
+    fun transposed() {
+        transposed = !transposed
+    }
+
+    val transpose get() = Matrix3D(elements.clone(), !transposed)
+
+    operator fun get(Row: Int, Col: Int): Double = when (transposed) {
+        false -> elements[Col * 3 + Row]
+        true -> elements[Row * 3 + Col]
+    }
+
+    operator fun set(Row: Int, Col: Int, value: Double): Unit = when (transposed) {
+        false -> elements[Col * 3 + Row] = value
+        true -> elements[Row * 3 + Col] = value
+    }
+
+    operator fun set(Row: Int, Col: Int, value: Number): Unit = set(Row, Col, value.toDouble())
+    operator fun times(other: Vec3D): Vec3D {
+        val result = Vec3D()
+        for (i in 0 until 3)
+            for (k in 0 until 3)
+                result[i] += this[i, k] * other[k]
+        return result
+    }
+
+    operator fun times(other: Matrix3D): Matrix3D {
+        val result = Matrix3D()
+        for (i in 0 until 3)
+            for (j in 0 until 3) {
+                result[i, j] = this[i, 1] * other[1, j] + this[i, 2] * other[2, j] + this[i, 3] * other[3, j]
+            }
+        return result
+    }
+
+    fun toQuaternion(): Quaternion {
+        val r = sqrt(1 + trace)
+        val s = 1 / (2 * r)
+        return Quaternion((this[3, 2] - this[2, 3]) * s, (this[1, 3] - this[3, 1]) * s, (this[2, 1] - this[1, 2]) * s)
+    }
+}
+
+
 //支持[]，范数，点积
 interface VecTor {
     val size: Int //get() = vector.size
@@ -47,16 +93,47 @@ class Quaternion(val qx: Double, val qy: Double, val qz: Double) {
     val magnitude by lazy { sqrt(qx * qx + qy * qy + qz * qz) }
     val qw by lazy { sqrt(1 - qx * qx - qy * qy - qz * qz) }
     fun toAxisAngle() = AxisAngle(2 * acos(qw), qx / magnitude, qy / magnitude, qz / magnitude)
+    fun toRotationMatrix(): Matrix3D {
+        val result = Matrix3D()
+        result[0, 0] = 1 - 2 * qy * qy - 2 * qz * qz
+        result[0, 1] = 2 * qx * qy - 2 * qz * qw
+        result[0, 2] = 2 * qx * qz + 2 * qy * qw
+        result[1, 0] = 2 * qx * qy + 2 * qz * qw
+        result[1, 1] = 1 - 2 * qx * qx - 2 * qz * qz
+        result[1, 2] = 2 * qy * qz - 2 * qx * qw
+        result[2, 0] = 2 * qx * qz - 2 * qy * qw
+        result[2, 1] = 2 * qy * qz + 2 * qx * qw
+        result[2, 2] = 1 - 2 * qx * qx - 2 * qy * qy
+        return result
+    }
 }
 
 //用旋转轴和旋转角表示
 class AxisAngle(val angle: Double, val x: Double, val y: Double, val z: Double) {
     operator fun times(other: Double) = AxisAngle(angle * other, x, y, z)
     fun toQuaternion() = Quaternion(x * sin(angle / 2), y * sin(angle / 2), z * sin(angle / 2))
+    fun toRotationMatrix(): Matrix3D {
+        val result = Matrix3D()
+        result[0, 0] = 1 - 2 * qy * qy - 2 * qz * qz
+        result[0, 1] = 2 * qx * qy - 2 * qz * qw
+        result[0, 2] = 2 * qx * qz + 2 * qy * qw
+        result[1, 0] = 2 * qx * qy + 2 * qz * qw
+        result[1, 1] = 1 - 2 * qx * qx - 2 * qz * qz
+        result[1, 2] = 2 * qy * qz - 2 * qx * qw
+        result[2, 0] = 2 * qx * qz - 2 * qy * qw
+        result[2, 1] = 2 * qy * qz + 2 * qx * qw
+        result[2, 2] = 1 - 2 * qx * qx - 2 * qy * qy
+        return result
+    }
 }
 
 
-fun MiddleAngle(Ort0: Vec3D, Ort1: Vec3D, a: Double): AxisAngle
-fun Rotate(X: Vec3D, Angle: AxisAngle): Vec3D {}
+fun MiddleAngle(Ort0: Vec3D, Ort1: Vec3D, a: Double): Matrix3D {
+    val R0 = Quaternion(Ort0).toRotationMatrix()
+    val R1 = Quaternion(Ort1).toRotationMatrix()
+    return ((R1*R0.transpose).toQuaternion().toAxisAngle()*a).toRotationMatrix()*R0
+}
+
+inline fun Rotate(X: Vec3D, R: Matrix3D) = R * X
 
 
