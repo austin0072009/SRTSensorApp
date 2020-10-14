@@ -3,6 +3,8 @@ package threeDvector
 import java.lang.IllegalArgumentException
 import java.lang.Math.pow
 import kotlin.math.abs
+import kotlin.math.asin
+import kotlin.math.sin
 import kotlin.math.sqrt
 
 //支持[]，范数，点积
@@ -39,7 +41,7 @@ fun dot(A: VecTor, B: VecTor): Double {
     return result
 }
 
-fun MiddleAngle(Ort0:Vec3D,Ort1:Vec3D,a:Double):Vec3D {}
+fun MiddleAngle(Ort0: Vec3D, Ort1: Vec3D, a: Double) = Vec3D(DoubleArray(3) { i -> sin(asin(Ort0[i]) * (1 - a) + asin(Ort1[i]) * a) })
 fun Rotate(X: Vec3D, Angle: Vec3D): Vec3D {}
 
 

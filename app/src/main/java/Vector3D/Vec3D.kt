@@ -35,6 +35,9 @@ data class Vec3D(var x: Double, var y: Double, var z: Double) : VecTor {
     //cross product
     operator fun times(other: Vec3D) = Vec3D(y * other.z - z * other.y, z * other.x - x * other.z, x * other.y - y * other.x)
 
+    operator fun times(other: Double) = Vec3D(x * other, y * other, z * other)
+    operator fun times(other: Number) = this.times(other.toDouble())
+    operator fun plus(other: Vec3D) = Vec3D(x + other.x, y + other.y, z + other.z)
     operator fun plusAssign(other: Vec3D) {
         x += other.x
         y += other.y
