@@ -50,30 +50,30 @@ class SensorRecord : Service(), SensorEventListener {
         private var lastT_GRV: Long = 0
         private var lastT_AccX: Long = 0
         private var T_AccX: Long = 0
-        private var lastAcc: Vec3D? = null
-        private var lastAccX: Vec3D? = null
-        private var lastGRV: Vec3D? = null
+        private lateinit var lastAcc: Vec3D
+        private lateinit var lastAccX: Vec3D
+        private lateinit var lastGRV: Vec3D
         private lateinit var AccX: Vec3D //已经转换坐标系的加速度
         private val Speed = Vec3D() //目前初始为0
         private val sensorData_Speed = ArrayList<Vec3D>()
 
         fun GRV_Update(time: Long, GRV: Vec3D) {
-            if (lastGRV != null && lastAcc != null && lastT_GRV <= lastT_Acc) {
-                AccX = lastAcc!!.Rotate(MiddleAngle(lastGRV!!, GRV, (lastT_Acc - lastT_GRV).toDouble() / (time - lastT_GRV).toDouble()));
+            if (this::lastGRV.isInitialized && this::lastAcc.isInitialized && lastT_GRV <= lastT_Acc) {
+                AccX = lastAcc.Rotate(MiddleAngle(lastGRV, GRV, (lastT_Acc - lastT_GRV).toDouble() / (time - lastT_GRV).toDouble()));
                 Acc_Update(lastT_Acc, AccX)
             }
             lastT_GRV = time
             lastGRV = GRV
         }
 
-        inline fun Acc_Update(time: Long, Acc: Vec3D) {
+        fun Acc_Update(time: Long, Acc: Vec3D) {
             lastT_Acc = time
             lastAcc = Acc
         }
 
-        private inline fun AccX_update(time: Long, Acc: Vec3D) {
-            if (lastAccX != null) {
-                Speed += (lastAccX!! + AccX) * ((time - lastT_AccX).toDouble() / 2000.0)
+        private fun AccX_update(time: Long, Acc: Vec3D) {
+            if (this::lastAccX.isInitialized) {
+                Speed += (lastAccX + AccX) * ((time - lastT_AccX).toDouble() / 2000.0)
                 currentSpeed.value = Speed
             }
             lastT_AccX = time

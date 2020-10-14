@@ -128,7 +128,7 @@ class AxisAngle(val angle: Double, val x: Double, val y: Double, val z: Double) 
 }
 
 
-fun MiddleAngle(Ort0: Vec3D, Ort1: Vec3D, a: Double): Matrix3D {
+inline fun MiddleAngle(Ort0: Vec3D, Ort1: Vec3D, a: Double): Matrix3D {
     val R0 = Quaternion(Ort0).toRotationMatrix()
     val R1 = Quaternion(Ort1).toRotationMatrix()
     return ((R1 * R0.transpose).toQuaternion().toAxisAngle() * a).toRotationMatrix() * R0

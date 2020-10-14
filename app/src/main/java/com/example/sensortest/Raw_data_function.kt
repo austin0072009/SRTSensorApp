@@ -61,14 +61,14 @@ class Raw_data_function : AppCompatActivity() {
                     // object and its info from the Intent.
                     val device: BluetoothDevice =
                             intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE)!!
-                    val deviceName = device.name
+                    //val deviceName = device.name
                     if (device.name == TARGET_DEVICE_NAME) {
                         bluetoothAdapter.cancelDiscovery();
                         applicationContext.toast("蓝牙已开启")
                         GlobalScope.launch { BluetoothService.connectDevice(device) }
                         return
                     }
-                    val deviceHardwareAddress = device.address // MAC address
+                    //val deviceHardwareAddress = device.address // MAC address
                 }
             }
         }
@@ -79,7 +79,7 @@ class Raw_data_function : AppCompatActivity() {
     private fun getPairedDevices(): Unit {
         // 获得和当前Android已经配对的蓝牙设备。
         val pairedDevices: Set<BluetoothDevice> = bluetoothAdapter.getBondedDevices()
-        if (pairedDevices != null && pairedDevices.size > 0) {
+        if (pairedDevices.isNotEmpty()) {
             for (device in pairedDevices) {
                 if (device.name == TARGET_DEVICE_NAME) {
                     applicationContext.toast("蓝牙已开启")
