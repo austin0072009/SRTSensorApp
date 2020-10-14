@@ -100,8 +100,8 @@ class Raw_data_function : AppCompatActivity() {
             val enableBtIntent = Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE)
             startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT)
         }*/
-        //val filter = IntentFilter(BluetoothDevice.ACTION_FOUND)
-        //registerReceiver(receiver, filter)
+        val filter = IntentFilter(BluetoothDevice.ACTION_FOUND)
+        registerReceiver(receiver, filter)
         //
         if (ServiceCheckUtil.isRunning(applicationContext, SensorRecord::class.qualifiedName)) {
             //若SensorRecord已在运行，绑定并更改相应设置
@@ -123,13 +123,13 @@ class Raw_data_function : AppCompatActivity() {
                 unbindService(connection)
                 stopService(intent)
                 //关闭蓝牙
-                //BluetoothService.cancel()
+                BluetoothService.cancel()
 
                 btn_start.text = "开始记录数据"
                 mBound = false
             } else {
                 //开启蓝牙
-                //getPairedDevices()
+                getPairedDevices()
 
                 val intent = Intent(this, SensorRecord::class.java)
                 intent.setAction("com.example.server.SensorRecord")
@@ -146,6 +146,6 @@ class Raw_data_function : AppCompatActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        //unregisterReceiver(receiver)
+        unregisterReceiver(receiver)
     }
 }

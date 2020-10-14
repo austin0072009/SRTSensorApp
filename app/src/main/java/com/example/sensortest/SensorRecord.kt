@@ -60,7 +60,7 @@ class SensorRecord : Service(), SensorEventListener {
         fun GRV_Update(time: Long, GRV: Vec3D) {
             if (this::lastGRV.isInitialized && this::lastAcc.isInitialized && lastT_GRV <= lastT_Acc) {
                 AccX = lastAcc.Rotate(MiddleAngle(lastGRV, GRV, (lastT_Acc - lastT_GRV).toDouble() / (time - lastT_GRV).toDouble()));
-                Acc_Update(lastT_Acc, AccX)
+                AccX_Update(lastT_Acc, AccX)
             }
             lastT_GRV = time
             lastGRV = GRV
@@ -71,7 +71,7 @@ class SensorRecord : Service(), SensorEventListener {
             lastAcc = Acc
         }
 
-        private fun AccX_update(time: Long, Acc: Vec3D) {
+        private fun AccX_Update(time: Long, Acc: Vec3D) {
             if (this::lastAccX.isInitialized) {
                 Speed += (lastAccX + AccX) * ((time - lastT_AccX).toDouble() / 2000.0)
                 currentSpeed.value = Speed
