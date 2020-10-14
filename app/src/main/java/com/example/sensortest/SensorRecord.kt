@@ -123,7 +123,7 @@ class SensorRecord : Service(), SensorEventListener {
             }
             Sensor.TYPE_GAME_ROTATION_VECTOR -> {
                 val tmpVec = Vec3D(event.values)
-                currentGRV.value = tmpVec
+                //currentGRV.value = tmpVec
                 SpeedCaculator.GRV_Update(System.currentTimeMillis(), tmpVec)
             }
         }

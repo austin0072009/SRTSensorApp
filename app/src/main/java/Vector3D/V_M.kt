@@ -4,11 +4,12 @@ import androidx.core.graphics.rotationMatrix
 import java.lang.IllegalArgumentException
 import java.lang.Math.pow
 import kotlin.math.*
+import threeDvector.QuaternionMode.*
 
 class Matrix3D(val elements: DoubleArray = DoubleArray(9), var transposed: Boolean = false) {
     constructor(M: Matrix3D) : this(M.elements.clone(), M.transposed)
 
-    val trace get() = this[1, 1] + this[2, 2] + this[3, 3]
+    val trace get() = this[0, 0] + this[1, 1] + this[2, 2]
     fun transposed() {
         transposed = !transposed
     }
@@ -38,7 +39,7 @@ class Matrix3D(val elements: DoubleArray = DoubleArray(9), var transposed: Boole
         val result = Matrix3D()
         for (i in 0 until 3)
             for (j in 0 until 3) {
-                result[i, j] = this[i, 1] * other[1, j] + this[i, 2] * other[2, j] + this[i, 3] * other[3, j]
+                result[i, j] = this[i, 0] * other[0, j] + this[i, 1] * other[1, j] + this[i, 2] * other[2, j]
             }
         return result
     }
@@ -46,7 +47,7 @@ class Matrix3D(val elements: DoubleArray = DoubleArray(9), var transposed: Boole
     fun toQuaternion(): Quaternion {
         val r = sqrt(1 + trace)
         val s = 1 / (2 * r)
-        return Quaternion((this[3, 2] - this[2, 3]) * s, (this[1, 3] - this[3, 1]) * s, (this[2, 1] - this[1, 2]) * s)
+        return Quaternion((this[2, 1] - this[1, 2]) * s, (this[0, 2] - this[2, 0]) * s, (this[1, 0] - this[0, 1]) * s)
     }
 }
 
@@ -86,24 +87,80 @@ fun dot(A: VecTor, B: VecTor): Double {
     } else throw IllegalArgumentException("The two vectors must be identical.")
 }
 
-//旋转的四元数表示
-class Quaternion(val qx: Double, val qy: Double, val qz: Double) {
-    constructor(Ort: Vec3D) : this(Ort.x, Ort.y, Ort.z)
+enum class QuaternionMode { NOTHING, UNIT }
 
-    val magnitude by lazy { sqrt(qx * qx + qy * qy + qz * qz) }
-    val qw by lazy { sqrt(1 - qx * qx - qy * qy - qz * qz) }
-    fun toAxisAngle() = AxisAngle(2 * acos(qw), qx / magnitude, qy / magnitude, qz / magnitude)
+//旋转的四元数表示
+class Quaternion {
+    val x: Double
+    val y: Double
+    val z: Double
+    val w: Double
+    val unitized: Boolean
+
+    //仅用于内部运算结果
+    private constructor(x: Double, y: Double, z: Double, w: Double, unitized: Boolean) {
+        this.x = x
+        this.y = y
+        this.z = z
+        this.w = w
+        this.unitized = unitized
+    }
+
+    constructor(x: Double, y: Double, z: Double, w: Double, QMode: QuaternionMode = UNIT) {
+        when (QMode) {
+            NOTHING -> {
+                this.x = x
+                this.y = y
+                this.z = z
+                this.w = w
+                this.unitized = false
+            }
+            UNIT -> {
+                val len = sqrt(x * x + y * y + z * z + w * w)
+                this.x = x / len
+                this.y = y / len
+                this.z = z / len
+                this.w = w / len
+                this.unitized = true
+            }
+        }
+    }
+
+    constructor(x: Double, y: Double, z: Double, QMode: QuaternionMode = UNIT) {
+        this.x = x
+        this.y = y
+        this.z = z
+        when (QMode) {
+            NOTHING -> {
+                this.w = 0.0
+                this.unitized = false
+            }
+            UNIT -> {
+                this.w = sqrt(1 - x * x - y * y - z * z)
+                this.unitized = true
+            }
+        }
+    }
+
+    constructor(Ort: Vec3D, QMode: QuaternionMode = UNIT) : this(Ort.x, Ort.y, Ort.z, QMode)
+
+    //目前进行这两个函数是默认归一化的
+    fun toAxisAngle(): AxisAngle {
+        val magnitude = sqrt(x * x + y * y + z * z)
+        return AxisAngle(2 * acos(w), x / magnitude, y / magnitude, z / magnitude)
+    }
+
     fun toRotationMatrix(): Matrix3D {
         val result = Matrix3D()
-        result[0, 0] = 1 - 2 * qy * qy - 2 * qz * qz
-        result[0, 1] = 2 * qx * qy - 2 * qz * qw
-        result[0, 2] = 2 * qx * qz + 2 * qy * qw
-        result[1, 0] = 2 * qx * qy + 2 * qz * qw
-        result[1, 1] = 1 - 2 * qx * qx - 2 * qz * qz
-        result[1, 2] = 2 * qy * qz - 2 * qx * qw
-        result[2, 0] = 2 * qx * qz - 2 * qy * qw
-        result[2, 1] = 2 * qy * qz + 2 * qx * qw
-        result[2, 2] = 1 - 2 * qx * qx - 2 * qy * qy
+        result[0, 0] = 1 - 2 * y * y - 2 * z * z
+        result[0, 1] = 2 * x * y - 2 * z * w
+        result[0, 2] = 2 * x * z + 2 * y * w
+        result[1, 0] = 2 * x * y + 2 * z * w
+        result[1, 1] = 1 - 2 * x * x - 2 * z * z
+        result[1, 2] = 2 * y * z - 2 * x * w
+        result[2, 0] = 2 * x * z - 2 * y * w
+        result[2, 1] = 2 * y * z + 2 * x * w
+        result[2, 2] = 1 - 2 * x * x - 2 * y * y
         return result
     }
 }
