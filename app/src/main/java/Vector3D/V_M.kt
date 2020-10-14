@@ -33,10 +33,11 @@ interface VecTor {
 
 fun dot(A: VecTor, B: VecTor): Double {
     var result: Double = 0.0
-    if (A.size != B.size) throw IllegalArgumentException("The two vectors must be identical.")
-    for (i in 0 until A.size)
-        result += A[i] * B[i]
-    return result
+    if (A.size == B.size) {
+        for (i in 0 until A.size)
+            result += A[i] * B[i]
+        return result
+    } else throw IllegalArgumentException("The two vectors must be identical.")
 }
 
 //旋转的四元数表示
