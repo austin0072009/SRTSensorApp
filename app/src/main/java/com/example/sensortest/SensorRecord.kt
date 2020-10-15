@@ -75,7 +75,7 @@ class SensorRecord : Service(), SensorEventListener {
 
         private fun AccX_Update(time: Long, Acc: Vec3D) {
             if (this::lastAccX.isInitialized) {
-                Speed += (lastAccX + AccX) * ((time - lastT_AccX).toDouble() / 2000.0)
+                Speed += (lastAccX + AccX) * ((time - lastT_AccX).toDouble() / 2e9)
                 currentSpeed.value = Speed
             }
             lastT_AccX = time
@@ -112,23 +112,30 @@ class SensorRecord : Service(), SensorEventListener {
         super.onRebind(intent)
     }
 
+    val test=StringBuilder()
+    var starttime:Long=0
+
     override fun onSensorChanged(event: SensorEvent) {
         val range = 1.0 //设定一个精度范围
         val sensor = event.sensor
+        if (starttime==0L) starttime=event.timestamp
 
         when (sensor.type) {
             Sensor.TYPE_LINEAR_ACCELERATION -> {
                 //Data Receive from sensor
                 val tmpVec = Vec3D(event.values)
                 currentAcc.value = tmpVec
-                SpeedCaculator.Acc_Update(System.currentTimeMillis(), tmpVec)
+                SpeedCaculator.Acc_Update(event.timestamp, tmpVec)
+                test.append("Acc:${event.timestamp} ")
             }
             Sensor.TYPE_GAME_ROTATION_VECTOR -> {
                 val tmpVec = Vec3D(event.values)
                 //currentGRV.value = tmpVec
-                SpeedCaculator.GRV_Update(System.currentTimeMillis(), tmpVec)
+                SpeedCaculator.GRV_Update(event.timestamp, tmpVec)
+                test.append("GRV:${event.timestamp} ")
             }
         }
+        if (event.timestamp-starttime>100_000_000_000) applicationContext.FileSave(test.toString(),filename = "tser.txt")
     }
 
     override fun onDestroy() {
