@@ -126,13 +126,13 @@ class SensorRecord : Service(), SensorEventListener {
                 val tmpVec = Vec3D(event.values)
                 currentAcc.value = tmpVec
                 SpeedCaculator.Acc_Update(event.timestamp, tmpVec)
-                test.append("Acc:$(event.timestamp)")
+                test.append("Acc:${event.timestamp} ")
             }
             Sensor.TYPE_GAME_ROTATION_VECTOR -> {
                 val tmpVec = Vec3D(event.values)
                 //currentGRV.value = tmpVec
                 SpeedCaculator.GRV_Update(event.timestamp, tmpVec)
-                test.append("GRV:$(event.timestamp)")
+                test.append("GRV:${event.timestamp} ")
             }
         }
         if (event.timestamp-starttime>100_000_000_000) applicationContext.FileSave(test.toString(),filename = "tser.txt")
