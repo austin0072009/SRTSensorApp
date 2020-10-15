@@ -198,8 +198,8 @@ class AxisAngle(val angle: Double, val x: Double, val y: Double, val z: Double) 
     }
 }
 
-
-inline fun Slerp(Ort0: Vec3D, Ort1: Vec3D, t: Double): Quaternion {
+//旋转的线性插值
+fun Slerp(Ort0: Vec3D, Ort1: Vec3D, t: Double): Quaternion {
     val R0 = Quaternion(Ort0)
     var R1 = Quaternion(Ort1)
     var cosa = R0.w * R1.w + R0.x * R1.x + R0.y * R1.y + R0.z * R1.z
@@ -221,6 +221,7 @@ inline fun Slerp(Ort0: Vec3D, Ort1: Vec3D, t: Double): Quaternion {
     return (R0 * k0 + R1 * k1).Unit
 }
 
-inline fun Vec3D.Rotate(Q: Quaternion) = (Q * Quaternion(this, NOTHING) * Q.conj).vec
+//旋转 p‘=qpq^-1=qpq*
+fun Vec3D.Rotate(Q: Quaternion) = (Q * Quaternion(this, NOTHING) * Q.conj).vec
 
 
