@@ -1,10 +1,9 @@
 package threeDvector
 //矩阵和向量相关操作
-import androidx.core.graphics.rotationMatrix
-import java.lang.IllegalArgumentException
+import threeDvector.QuaternionMode.NOTHING
+import threeDvector.QuaternionMode.UNIT
 import java.lang.Math.pow
 import kotlin.math.*
-import threeDvector.QuaternionMode.*
 
 class Matrix3D(val elements: DoubleArray = DoubleArray(9), var transposed: Boolean = false) {
     constructor(M: Matrix3D) : this(M.elements.clone(), M.transposed)
@@ -106,7 +105,7 @@ class Quaternion {
         this.unitized = unitized
     }
 
-    constructor(x: Double, y: Double, z: Double, w: Double, QMode: QuaternionMode = UNIT) {
+    constructor(x: Double, y: Double, z: Double, w: Double, QMode: QuaternionMode = NOTHING) {
         when (QMode) {
             NOTHING -> {
                 this.x = x
@@ -163,6 +162,21 @@ class Quaternion {
         result[2, 2] = 1 - 2 * x * x - 2 * y * y
         return result
     }
+
+    inline val vec get() = Vec3D(x,y,z)
+    val conj get() = Quaternion(-x, -y, -z, w, unitized)
+    inline val Unit get() = Quaternion(x, y, z, w, UNIT)
+    operator fun plus(other: Quaternion) = Quaternion(x + other.x, y + other.y, z + other.z, w + other.w)
+    operator fun times(other: Quaternion) = Quaternion(
+            w * other.x + x * other.w + y * other.z - z * other.y,
+            w * other.y + y * other.w + z * other.x - x * other.z,
+            w * other.z + z * other.w + x * other.y - y * other.x,
+            w * other.w - x * other.x - y * other.y - z * other.z,
+            unitized && other.unitized
+    )
+
+    operator fun unaryMinus() = Quaternion(-x, -y, -z, -w, unitized)
+    operator fun times(other: Double) = Quaternion(x * other, y * other, z * other, w * other)
 }
 
 //用旋转轴和旋转角表示
@@ -185,12 +199,28 @@ class AxisAngle(val angle: Double, val x: Double, val y: Double, val z: Double) 
 }
 
 
-inline fun MiddleAngle(Ort0: Vec3D, Ort1: Vec3D, a: Double): Matrix3D {
-    val R0 = Quaternion(Ort0).toRotationMatrix()
-    val R1 = Quaternion(Ort1).toRotationMatrix()
-    return ((R1 * R0.transpose).toQuaternion().toAxisAngle() * a).toRotationMatrix() * R0
+inline fun Slerp(Ort0: Vec3D, Ort1: Vec3D, t: Double): Quaternion {
+    val R0 = Quaternion(Ort0)
+    var R1 = Quaternion(Ort1)
+    var cosa = R0.w * R1.w + R0.x * R1.x + R0.y * R1.y + R0.z * R1.z
+    if (cosa < 0.0) {
+        R1 = -R1
+        cosa = -cosa
+    }
+    val k0:Double
+    val k1:Double
+    if (cosa > 0.9995) {
+        k0 = 1.0 - t
+        k1 = t
+    } else {
+        val sina = sqrt(1.0 - cosa * cosa)
+        val a = atan2(sina, cosa)
+        k0 = sin((1.0 - t) * a) / sina
+        k1 = sin(t * a) / sina
+    }
+    return (R0 * k0 + R1 * k1).Unit
 }
 
-inline fun Vec3D.Rotate(R: Matrix3D) = R * this
+inline fun Vec3D.Rotate(Q: Quaternion) = (Q * Quaternion(this, NOTHING) * Q.conj).vec
 
 
