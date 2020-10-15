@@ -69,7 +69,7 @@ object BluetoothService {
 
 
     suspend fun connectDevice(device: BluetoothDevice) {
-        bluetoothAdapter.cancelDiscovery()
+        //bluetoothAdapter.cancelDiscovery()  //已在外部取消搜索
         withContext(Dispatchers.IO) {
             socket = device.createInsecureRfcommSocketToServiceRecord(uuid)
             try {
@@ -88,7 +88,7 @@ object BluetoothService {
 
     fun cancel() {
         try {
-            socket?.close()
+            if (socket.isConnected) socket.close()
         } catch (e: IOException) {
             Log.e(TAG, "Could not close the client socket", e)
         }

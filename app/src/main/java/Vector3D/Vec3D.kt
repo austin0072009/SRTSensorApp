@@ -5,6 +5,7 @@ import kotlin.math.sqrt
 
 
 data class Vec3D(var x: Double, var y: Double, var z: Double) : VecTor {
+    constructor() : this(0.0, 0.0, 0.0)
     constructor(coord: Array<Number>) : this(coord[0].toDouble(), coord[1].toDouble(), coord[2].toDouble())
     constructor(coord: FloatArray) : this(coord[0].toDouble(), coord[1].toDouble(), coord[2].toDouble())
     constructor(coord: DoubleArray) : this(coord[0], coord[1], coord[2])
@@ -34,6 +35,15 @@ data class Vec3D(var x: Double, var y: Double, var z: Double) : VecTor {
 
     //cross product
     operator fun times(other: Vec3D) = Vec3D(y * other.z - z * other.y, z * other.x - x * other.z, x * other.y - y * other.x)
+
+    operator fun times(other: Double) = Vec3D(x * other, y * other, z * other)
+    operator fun times(other: Number) = this.times(other.toDouble())
+    operator fun plus(other: Vec3D) = Vec3D(x + other.x, y + other.y, z + other.z)
+    operator fun plusAssign(other: Vec3D) {
+        x += other.x
+        y += other.y
+        z += other.z
+    }
 
     val magnitude get() = sqrt(x * x + y * y + z * z)
     override val size get() = 3   //VecTor接口需要
