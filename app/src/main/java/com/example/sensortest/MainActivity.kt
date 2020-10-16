@@ -8,6 +8,7 @@ import android.content.ServiceConnection
 import android.os.Bundle
 import android.os.IBinder
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import kotlinx.android.synthetic.main.activity_main.*
 import threeDvector.Vec3D
@@ -15,6 +16,8 @@ import java.text.DecimalFormat
 
 
 class MainActivity : AppCompatActivity() {
+
+    private lateinit var firstFragment:Fragment
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,14 +43,21 @@ class MainActivity : AppCompatActivity() {
     }*/
 
 
-    fun Btn_listener()
-    {
+    fun Btn_listener() {
         Btn_1.setOnClickListener {
             val intent = Intent();
-            intent.setClass( this , Raw_data_function::class.java)
+            intent.setClass(this, Raw_data_function::class.java)
             startActivity(intent)
         }
+        Btn_zc.setOnClickListener{
+            firstFragment = ZeroCalibration()
+            supportFragmentManager.beginTransaction()
+                    .add(R.id.fragment_container, firstFragment).commit()
+        }
     }
+
+    fun deleteFragment() = supportFragmentManager.beginTransaction().remove(firstFragment).commit()
+
     override fun onDestroy() {
         super.onDestroy()
     }
