@@ -5,119 +5,124 @@
     android:orientation="vertical"
     android:padding="5dp">
 
-    <ScrollView
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-        <LinearLayout
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="10dp"
+            android:layout_weight="0.5"
+            android:text="Acceleration"
+            android:textSize="25sp" />
+
+        <TextView
+            android:id="@+id/tv_step"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="left"
+            android:layout_marginTop="5dp"
+
+            android:layout_weight="0.7"
+            android:text="X:"
+            android:textColor="#DE5347"
+            android:textSize="40sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tv_step2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="left"
+            android:layout_marginTop="5dp"
+
+            android:layout_weight="0.7"
+            android:text="Y:"
+            android:textColor="#DE5347"
+            android:textSize="40sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tv_step3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="left"
+            android:layout_marginTop="5dp"
+            android:layout_weight="0.7"
+            android:text="Z:"
+            android:textColor="#DE5347"
+            android:textSize="40sp"
+            android:textStyle="bold" />
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="20dp"
+            android:layout_weight="0.5"
+            android:text="Orentation"
+            android:textSize="25sp" />
+
+        <TextView
+            android:id="@+id/tv_Gstep"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="left"
+            android:layout_marginTop="5dp"
+
+            android:layout_weight="0.7"
+            android:text="X:"
+            android:textColor="#4779DE"
+            android:textSize="40sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tv_Gstep2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="left"
+            android:layout_marginTop="5dp"
+
+            android:layout_weight="0.7"
+            android:text="Y:"
+            android:textColor="#4779DE"
+            android:textSize="40sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tv_Gstep3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="left"
+            android:layout_marginTop="5dp"
+            android:layout_weight="0.7"
+            android:text="Z:"
+            android:textColor="#4779DE"
+            android:textSize="40sp"
+            android:textStyle="bold" />
+
+
+        <Button
+            android:id="@+id/btn_start"
+            android:layout_width="match_parent"
+            android:layout_height="64dp"
+            android:layout_weight="1.5"
+            android:text="开始记录数据"
+            android:textSize="25sp" />
+
+        <TextView
+            android:id="@+id/textView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:layout_weight="0.3"
+            android:text="SmartCabin Project" />
 
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="30dp"
-                android:text="Acceleration"
-                android:textSize="25sp" />
-
-            <TextView
-                android:id="@+id/tv_step"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="left"
-
-                android:layout_marginTop="5dp"
-                android:text="X:"
-                android:textColor="#DE5347"
-                android:textSize="50sp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/tv_step2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="left"
-
-                android:layout_marginTop="5dp"
-                android:text="Y:"
-                android:textColor="#DE5347"
-                android:textSize="50sp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/tv_step3"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="left"
-                android:layout_marginTop="5dp"
-                android:text="Z:"
-                android:textColor="#DE5347"
-                android:textSize="50sp"
-                android:textStyle="bold" />
-
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="30dp"
-                android:text="Orentation"
-                android:textSize="25sp" />
-
-            <TextView
-                android:id="@+id/tv_Gstep"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="left"
-
-                android:layout_marginTop="5dp"
-                android:text="X:"
-                android:textColor="#4779DE"
-                android:textSize="50sp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/tv_Gstep2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="left"
-
-                android:layout_marginTop="5dp"
-                android:text="Y:"
-                android:textColor="#4779DE"
-                android:textSize="50sp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/tv_Gstep3"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="left"
-                android:layout_marginTop="5dp"
-                android:text="Z:"
-                android:textColor="#4779DE"
-                android:textSize="50sp"
-                android:textStyle="bold" />
-
-
-            <Button
-                android:id="@+id/btn_start"
-                android:layout_width="match_parent"
-                android:layout_height="64dp"
-                android:text="开始记录数据"
-                android:textSize="25sp" />
-
-            <TextView
-                android:id="@+id/textView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="SmartCabin Project" />
-
-        </LinearLayout>
-    </ScrollView>
+    </LinearLayout>
 
 
 </LinearLayout>
