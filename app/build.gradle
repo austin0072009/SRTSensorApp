@@ -46,6 +46,8 @@ dependencies {
     implementation "org.jetbrains.anko:anko-coroutines:$anko_version"
     implementation "com.google.guava:guava:29.0-android"
 
+    implementation "androidx.lifecycle:lifecycle-runtime-ktx:2.2.0-alpha01"
+
     //   androidTestImplementation 'androidx.test.ext:junit:1.1.2'
  //   androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
 

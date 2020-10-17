@@ -39,6 +39,7 @@ data class Vec3D(var x: Double, var y: Double, var z: Double) : VecTor {
     operator fun times(other: Double) = Vec3D(x * other, y * other, z * other)
     operator fun times(other: Number) = this.times(other.toDouble())
     operator fun plus(other: Vec3D) = Vec3D(x + other.x, y + other.y, z + other.z)
+    operator fun minus(other: Vec3D) = Vec3D(x - other.x, y - other.y, z - other.z)
     operator fun plusAssign(other: Vec3D) {
         x += other.x
         y += other.y
@@ -48,3 +49,5 @@ data class Vec3D(var x: Double, var y: Double, var z: Double) : VecTor {
     val magnitude get() = sqrt(x * x + y * y + z * z)
     override val size get() = 3   //VecTor接口需要
 }
+
+data class Vec3D_t(val v:Vec3D, val time:Long)
