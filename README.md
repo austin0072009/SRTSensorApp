@@ -13,3 +13,7 @@ The application is able to read the raw data from the android devices sensor eas
 2.GPS test avaible
 
 It is possible to read the motion information from the GPS framework
+
+3.BlueTooth connection available
+
+The BlutTooth connection function between different devices is available now.
