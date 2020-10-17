@@ -1,25 +1,26 @@
 package com.example.sensortest
 
-import android.R
-import android.app.Notification
 import android.app.Service
 import android.content.Context
 import android.content.Intent
-import android.graphics.drawable.BitmapDrawable
 import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
 import android.os.*
-import androidx.annotation.RequiresApi
-import androidx.core.app.NotificationCompat
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleCoroutineScope
 import androidx.lifecycle.MutableLiveData
-import kotlinx.coroutines.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import threeDvector.Rotate
 import threeDvector.Slerp
 import threeDvector.Vec3D
-import java.lang.StringBuilder
+import threeDvector.Vec3D_t
 import java.util.*
+import kotlin.concurrent.timerTask
 
 
 class SensorRecord : Service(), SensorEventListener {
@@ -27,6 +28,8 @@ class SensorRecord : Service(), SensorEventListener {
     private lateinit var sensorManager: SensorManager
     private lateinit var powerManager: PowerManager
     private lateinit var m_wkik: PowerManager.WakeLock
+    private val sensorData_Speed = ArrayList<Vec3D_t>()
+    private var Acc0 = Vec3D()
 
     //private val sensorData_Acc = ArrayList<Vec3D>()
     //private val sensorData_GRV = ArrayList<Vec3D>()
@@ -57,7 +60,6 @@ class SensorRecord : Service(), SensorEventListener {
         private lateinit var lastGRV: Vec3D
         private lateinit var AccX: Vec3D //已经转换坐标系的加速度
         private val Speed = Vec3D() //目前初始为0
-        private val sensorData_Speed = ArrayList<Vec3D>()
 
         fun GRV_Update(time: Long, GRV: Vec3D) {
             if (this::lastGRV.isInitialized && this::lastAcc.isInitialized && lastT_GRV <= lastT_Acc) {
@@ -76,10 +78,19 @@ class SensorRecord : Service(), SensorEventListener {
         private fun AccX_Update(time: Long, Acc: Vec3D) {
             if (this::lastAccX.isInitialized) {
                 Speed += (lastAccX + AccX) * ((time - lastT_AccX).toDouble() / 2e9)
-                currentSpeed.value = Speed
+                sensorData_Speed.add(Vec3D_t(Speed, time))
             }
             lastT_AccX = time
             lastAccX = Acc
+        }
+    }
+
+    private val mHandler = object : Handler(Looper.getMainLooper()) {
+        override fun handleMessage(msg: Message) {
+            if (msg.what == 0x2739) {
+                applicationContext.FileSave(serialize(sensorData_Speed), filename = "SpeedRecord.JSON")
+            }
+            super.handleMessage(msg)
         }
     }
 
@@ -94,6 +105,11 @@ class SensorRecord : Service(), SensorEventListener {
         powerManager = applicationContext.getSystemService(Context.POWER_SERVICE) as PowerManager
         m_wkik = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, SensorRecord::class.qualifiedName)
         m_wkik.acquire()
+        //读取校零值
+        val tmp = applicationContext.FileLoad(filename = "Avg.JSON")
+        if (tmp != null) Acc0 = deserialize<Vec3D>(tmp)
+        //定时保存
+        Timer().schedule(timerTask { mHandler.sendEmptyMessage(0x2739) }, 5_000, 60_000)
     }
 
     override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {}
@@ -112,30 +128,23 @@ class SensorRecord : Service(), SensorEventListener {
         super.onRebind(intent)
     }
 
-    val test=StringBuilder()
-    var starttime:Long=0
-
     override fun onSensorChanged(event: SensorEvent) {
         val range = 1.0 //设定一个精度范围
         val sensor = event.sensor
-        if (starttime==0L) starttime=event.timestamp
 
         when (sensor.type) {
             Sensor.TYPE_LINEAR_ACCELERATION -> {
                 //Data Receive from sensor
                 val tmpVec = Vec3D(event.values)
                 currentAcc.value = tmpVec
-                SpeedCaculator.Acc_Update(event.timestamp, tmpVec)
-                test.append("Acc:${event.timestamp} ")
+                SpeedCaculator.Acc_Update(event.timestamp, tmpVec - Acc0)
             }
             Sensor.TYPE_GAME_ROTATION_VECTOR -> {
                 val tmpVec = Vec3D(event.values)
-                //currentGRV.value = tmpVec
+                currentGRV.value = tmpVec
                 SpeedCaculator.GRV_Update(event.timestamp, tmpVec)
-                test.append("GRV:${event.timestamp} ")
             }
         }
-        if (event.timestamp-starttime>100_000_000_000) applicationContext.FileSave(test.toString(),filename = "tser.txt")
     }
 
     override fun onDestroy() {
