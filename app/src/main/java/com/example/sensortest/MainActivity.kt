@@ -1,17 +1,9 @@
 package com.example.sensortest
 
-import android.app.ActivityManager
-import android.content.ComponentName
-import android.content.Context
 import android.content.Intent
-import android.content.ServiceConnection
 import android.os.Bundle
-import android.os.IBinder
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.Observer
 import kotlinx.android.synthetic.main.activity_main.*
-import threeDvector.Vec3D
-import java.text.DecimalFormat
 
 
 class MainActivity : AppCompatActivity() {
@@ -45,6 +37,11 @@ class MainActivity : AppCompatActivity() {
         Btn_1.setOnClickListener {
             val intent = Intent();
             intent.setClass( this , Raw_data_function::class.java)
+            startActivity(intent)
+        }
+        Btn_2.setOnClickListener {
+            val intent = Intent();
+            intent.setClass( this , MotionFunction::class.java)
             startActivity(intent)
         }
     }
