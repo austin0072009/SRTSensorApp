@@ -42,7 +42,7 @@ class Raw_data_function : AppCompatActivity() {
             val binder = service as SensorRecord.LocalBinder
             mService = binder.getService()
             mService.currentAcc.observe(this@Raw_data_function, AccObserver)
-            mService.currentSpeed.observe(this@Raw_data_function, GRVObserver)
+            mService.currentGRV.observe(this@Raw_data_function, GRVObserver)
             mBound = true
         }
 

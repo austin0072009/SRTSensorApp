@@ -8,13 +8,12 @@ import android.widget.Toast
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import org.jetbrains.anko.toast
-import java.io.File
-import java.io.FileOutputStream
-import java.io.IOException
+import java.io.*
 
 /*
  * 使用GSON将对象JSON序列化以及反序列化
  * */
+fun serialize(src:Any): String = Gson().toJson(src)
 fun serialize(vararg srcs: Any): String = Gson().toJson(srcs)
 inline fun <reified T> deserialize(json: String): T = Gson().fromJson<T>(json, object : TypeToken<T>() {}.type)
 
@@ -41,18 +40,24 @@ fun Context.FileSave(fileContent: String, filepath: String? = null, filename: St
 /*
  * 这里定义的是文件读取的方法
  * */
-/*@Throws(IOException::class, FileNotFoundException::class)
-fun VecDatasave(mContext: Context, filename: String?): String {
-    //打开文件输入流
-    val input = mContext!!.openFileInput(filename)
-    val temp = ByteArray(1024)
-    val sb = StringBuilder("")
-    var len = 0
-    //读取文件内容:
-    while (input.read(temp).also { len = it } > 0) {
-        sb.append(String(temp, 0, len))
-    }
-    //关闭输入流
-    input.close()
-    return sb.toString()
-}*/
+fun Context.FileLoad(filepath: String? = null, filename: String): String? {
+    if (Environment.getExternalStorageState() == Environment.MEDIA_MOUNTED) {
+        val myExternalFile: File = File(getExternalFilesDir(filepath), filename)
+        try {
+            //verifyStoragePermissions()
+            var fileInputStream = FileInputStream(myExternalFile)
+            var inputStreamReader: InputStreamReader = InputStreamReader(fileInputStream)
+            val bufferedReader: BufferedReader = BufferedReader(inputStreamReader)
+            val stringBuilder: StringBuilder = StringBuilder()
+            var text: String? = null
+            while ({ text = bufferedReader.readLine(); text }() != null) {
+                stringBuilder.append(text)
+            }
+            fileInputStream.close()
+            return stringBuilder.toString()
+        } catch (e: IOException) {
+            e.printStackTrace()
+        }
+    } else applicationContext.toast("SD卡不存在或者不可读写")
+    return null
+}
