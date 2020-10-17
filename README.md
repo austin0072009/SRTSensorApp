@@ -10,6 +10,8 @@ Code with the latest upadated Kotlin kit.
 
 The application is able to read the raw data from the android devices sensor easily
 
+(Data Provided : Sensor data with timestamp , Several motion information calculated from the raw data)
+
 2.GPS test avaible
 
 It is possible to read the motion information from the GPS framework
