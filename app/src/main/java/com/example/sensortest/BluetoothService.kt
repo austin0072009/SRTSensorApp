@@ -21,11 +21,11 @@ object BluetoothService {
 
     val isConnected get() = this::socket.isInitialized && socket.isConnected
 
-    suspend fun sendData(data: ByteArray, startBytes: ByteArray, untilBytes: ByteArray) =
+    suspend fun sendData(data: ByteArray) =
             coroutineScope {
                 withContext(Dispatchers.IO) {
                     outputStream.write(data)
-                    listenData(startBytes, untilBytes = untilBytes)
+                    //listenData(startBytes, untilBytes = untilBytes)
                 }
             }
 
