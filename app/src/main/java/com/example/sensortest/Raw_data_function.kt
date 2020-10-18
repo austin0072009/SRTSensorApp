@@ -118,9 +118,6 @@ class Raw_data_function : AppCompatActivity() {
         btn_start.text = if (processState) "停止" else "开始记录数据"
         btn_start.setOnClickListener {
             if (processState) {
-                //开启蓝牙
-                getPairedDevices()
-
                 val intent = Intent(this, SensorRecord::class.java)
                 intent.setAction("com.example.server.SensorRecord")
                 unbindService(connection)
@@ -129,7 +126,6 @@ class Raw_data_function : AppCompatActivity() {
                 BluetoothService.cancel()
 
                 btn_start.text = "开始记录数据"
-                mBound = false
             } else {
                 //开启蓝牙
                 getPairedDevices()
