@@ -75,13 +75,23 @@ class SensorRecord : Service(), SensorEventListener {
             lastAcc = Acc
         }
 
-        private fun AccX_Update(time: Long, Acc: Vec3D) {
+        private fun AccX_Update(time: Long, AccX: Vec3D) {
             if (this::lastAccX.isInitialized) {
                 Speed += (lastAccX + AccX) * ((time - lastT_AccX).toDouble() / 2e9)
-                sensorData_Speed.add(Vec3D_t(Speed.copy(), time))
             }
             lastT_AccX = time
-            lastAccX = Acc
+            lastAccX = AccX
+        }
+
+        fun sample()= sensorData_Speed.add(Vec3D_t(Speed.copy(), lastT_AccX))
+    }
+
+    private val mHandler = object : Handler(Looper.getMainLooper()) {
+        override fun handleMessage(msg: Message) {
+            if (msg.what == 0x2739) {
+                SpeedCaculator.sample()
+            }
+            super.handleMessage(msg)
         }
     }
 
@@ -99,6 +109,8 @@ class SensorRecord : Service(), SensorEventListener {
         //读取校零值
         val tmp = applicationContext.FileLoad(filename = "Avg.JSON")
         if (tmp != null) Acc0 = deserialize<Vec3D>(tmp)
+        //定时采样
+        Timer().schedule(timerTask { mHandler.sendEmptyMessage(0x2739) }, 3_000, 1_000)
     }
 
     override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {}
