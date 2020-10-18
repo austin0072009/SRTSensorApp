@@ -83,7 +83,10 @@ class SensorRecord : Service(), SensorEventListener {
             lastAccX = AccX
         }
 
-        fun sample()= sensorData_Speed.add(Vec3D_t(Speed.copy(), lastT_AccX))
+        fun sample() {
+            sensorData_Speed.add(Vec3D_t(Speed.copy(), lastT_AccX))
+            if (BluetoothService.isConnected) GlobalScope.launch { BluetoothService.sendData(serialize(lastAccX).toByteArray()) }
+        }
     }
 
     private val mHandler = object : Handler(Looper.getMainLooper()) {
