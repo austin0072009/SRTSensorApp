@@ -26,7 +26,7 @@ class ZeroCalibration : Fragment(), CoroutineScope by CoroutineScope(Dispatchers
             val ans = sum * (1.0 / count)
             activity!!.applicationContext.FileSave(fileContent = serialize(ans), filename = "Avg.JSON")
             val fatherActivity=this@ZeroCalibration.activity as MainActivity //这样可以调用MainActivity里自定义的部分
-            fatherActivity.deleteFragment()
+           // fatherActivity.deleteFragment()
         }
         launch {
             delay(2000L)

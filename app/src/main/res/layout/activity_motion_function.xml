@@ -10,11 +10,11 @@
         android:id="@+id/motion0"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_margin="20dp"
         android:ems="10"
         android:inputType="textPersonName"
-        android:text="SPEED:"
-        tools:layout_editor_absoluteX="15dp"
-        tools:layout_editor_absoluteY="34dp" />
+        android:text="ACCELERATION:"
+        android:textSize="30sp" />
 
     <TextView
         android:id="@+id/motion1"
@@ -23,8 +23,8 @@
         android:ems="10"
         android:inputType="textPersonName"
         android:text="BEARING:"
-        tools:layout_editor_absoluteX="15dp"
-        tools:layout_editor_absoluteY="107dp" />
+        android:textSize="30sp"
+        android:layout_margin="20dp"/>
 
     <TextView
         android:id="@+id/motion2"
@@ -33,27 +33,26 @@
         android:ems="10"
         android:inputType="textPersonName"
         android:text="DISTANCE:"
-        tools:layout_editor_absoluteX="16dp"
-        tools:layout_editor_absoluteY="191dp" />
+        android:textSize="30sp"
+        android:layout_margin="20dp"/>
 
     <TextView
         android:id="@+id/motion3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_margin="20dp"
         android:ems="10"
         android:inputType="textPersonName"
-        android:text="ACCELERATION:"
-        tools:layout_editor_absoluteX="17dp"
-        tools:layout_editor_absoluteY="280dp" />
+        android:text="SPEED:"
+        android:textSize="30sp" />
 
     <TextView
         android:id="@+id/motion4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:editable="true"
+        android:layout_margin="20dp"
         android:ems="10"
         android:inputType="textPersonName"
         android:text="LOCATION:"
-        tools:layout_editor_absoluteX="17dp"
-        tools:layout_editor_absoluteY="280dp" />
+        android:textSize="10sp" />
 </LinearLayout>
