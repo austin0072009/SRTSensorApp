@@ -88,7 +88,7 @@ object BluetoothService {
 
     fun cancel() {
         try {
-            if (socket.isConnected) socket.close()
+            if (this.isConnected) socket.close()
         } catch (e: IOException) {
             Log.e(TAG, "Could not close the client socket", e)
         }
